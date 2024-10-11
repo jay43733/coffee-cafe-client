@@ -34,7 +34,7 @@ const Login = () => {
     //Validate User
     const error = validator.validateLogin(form);
     if (error) {
-      return setFormError(error);
+      return navigate("/login")
     }
 
     //Send to Front

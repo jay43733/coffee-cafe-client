@@ -8,7 +8,6 @@ export default function SecondaryButton({
   color,
   ...rest
 }) {
-  // console.log(isClicked,text,"CHECK");
 
   return (
     <div>

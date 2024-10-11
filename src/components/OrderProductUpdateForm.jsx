@@ -8,23 +8,26 @@ import useUserStore from "../store/user-store";
 import useCartStore from "../store/cart-store";
 import { toast } from "react-toastify";
 
-export const OrderProductForm = ({ currentItem }) => {
+export const OrderProductUpdateForm = () => {
   //Import From Zustand
+  // console.log(currentCart);
   const token = useUserStore((state) => state.token);
-  const actionAddCart = useCartStore((state) => state.actionAddCart);
-  const actionGetCart = useCartStore((state)=>state.actionGetCart)
+  const actionGetCart = useCartStore((state) => state.actionGetCart);
+  const actionUpdateCart = useCartStore((state) => state.actionUpdateCart);
+  const currentCart = useCartStore((state) => state.currentCart);
+  const setCurrentCart = useCartStore((state) => state.setCurrentCart);
 
-  const [orderForm, setOrderForm] = useState({
-    productId: currentItem.id,
-    price: currentItem.price,
-    sweetness: "S100",
-    roast: "",
-    comment: "",
-    amount: 1,
+  const [orderUpdateForm, setOrderUpdateForm] = useState({
+    productId: currentCart?.id,
+    price: currentCart?.price,
+    sweetness: currentCart?.sweetness,
+    roast: currentCart?.roast,
+    comment: currentCart?.comment,
+    amount: currentCart?.amount,
   });
 
   const data = [
-    { id: 1, text: "0%", value: "S0" },
+    { id: 1, text: "0%", value: "NOSUGAR" },
     { id: 2, text: "25%", value: "S25" },
     { id: 3, text: "50%", value: "S50" },
     { id: 4, text: "75%", value: "S75" },
@@ -32,35 +35,36 @@ export const OrderProductForm = ({ currentItem }) => {
   ];
 
   const hdlCloseModal = () => {
-    document.getElementById("order-product").close();
+    setCurrentCart(null);
+    document.getElementById("order-cart").close();
   };
 
   const hdlOrderOption = (e) => {
-    // console.log(e.target.value)
-    setOrderForm((prv) => ({ ...prv, [e.target.name]: e.target.value }));
+    console.log(e.target.value, "Option");
+    setOrderUpdateForm((prv) => ({ ...prv, [e.target.name]: e.target.value }));
   };
 
   const hdlOrderComment = (e) => {
-    // console.log(e.target.value);
-    setOrderForm((prv) => ({ ...prv, [e.target.name]: e.target.value }));
+    console.log(e.target.value, "Comment");
+    setOrderUpdateForm((prv) => ({ ...prv, [e.target.name]: e.target.value }));
   };
 
   const hdlIncreaseAmount = () => {
-    setOrderForm((prv) => ({ ...prv, amount: prv.amount + 1 }));
+    setOrderUpdateForm((prv) => ({ ...prv, amount: prv.amount + 1 }));
   };
 
   const hdlDecreaseAmount = () => {
-    if (orderForm.amount <= 1) {
+    if (orderUpdateForm.amount === 1) {
       return;
     }
-    setOrderForm((prv) => ({ ...prv, amount: prv.amount - 1 }));
+    setOrderUpdateForm((prv) => ({ ...prv, amount: prv.amount - 1 }));
   };
 
-  const hdlSendToCart = async (e) => {
+  const hdlSendToCart = async (e, id) => {
     try {
       e.preventDefault();
-      await actionAddCart(orderForm, token);
-      await actionGetCart(token)
+      await actionUpdateCart(orderUpdateForm, token, id);
+      await actionGetCart(token);
       e.target.closest("dialog").close();
     } catch (error) {
       const errorMessage = error.response?.data?.error || error.message;
@@ -70,17 +74,21 @@ export const OrderProductForm = ({ currentItem }) => {
   };
 
   return (
-    <form onSubmit={hdlSendToCart}>
+    <form onSubmit={(e) => hdlSendToCart(e, currentCart.id)}>
       <div className="p-8 flex flex-col items-center gap-1 ">
-        <img src={currentItem.image} alt="product-image" width="100px" />
+        <img
+          src={currentCart?.products?.image}
+          alt="product-image"
+          width="100px"
+        />
         <Heading
-          text={currentItem.name}
+          text={currentCart?.name}
           color="primary"
           fontSize="18"
           fontWeight="bold"
         />
         <Heading
-          text={`${currentItem.price} baht`}
+          text={`${currentCart?.products.price*currentCart?.amount} baht`}
           color="secondary"
           fontSize="16"
           fontWeight="normal"
@@ -104,13 +112,13 @@ export const OrderProductForm = ({ currentItem }) => {
                 name="sweetness"
                 text={item.text}
                 value={item.value}
-                sweetness={orderForm.sweetness}
+                sweetness={orderUpdateForm.sweetness}
                 func={hdlOrderOption}
               />
             ))}
           </div>
         </div>
-        {currentItem.product_categoryId === 1 && (
+        {currentCart?.products?.product_categoryId === 1 && (
           <div className="flex flex-col gap-1">
             {/* Roast */}
             <Heading
@@ -125,7 +133,7 @@ export const OrderProductForm = ({ currentItem }) => {
                 name="roast"
                 text="Light"
                 value="LIGHT"
-                roast={orderForm.roast}
+                roast={orderUpdateForm.roast}
                 func={hdlOrderOption}
               />
               <ModalButton
@@ -133,7 +141,7 @@ export const OrderProductForm = ({ currentItem }) => {
                 name="roast"
                 text="Medium"
                 value="MEDIUM"
-                roast={orderForm.roast}
+                roast={orderUpdateForm.roast}
                 func={hdlOrderOption}
               />
               <ModalButton
@@ -141,7 +149,7 @@ export const OrderProductForm = ({ currentItem }) => {
                 name="roast"
                 text="Dark"
                 value="DARK"
-                roast={orderForm.roast}
+                roast={orderUpdateForm.roast}
                 defaultSelected="dark"
                 func={hdlOrderOption}
               />
@@ -159,7 +167,7 @@ export const OrderProductForm = ({ currentItem }) => {
           />
           <Input
             name="comment"
-            value={orderForm.comment}
+            value={orderUpdateForm.comment}
             onChange={hdlOrderComment}
             placeholder="Let us know your coffee preferences"
           />
@@ -167,14 +175,14 @@ export const OrderProductForm = ({ currentItem }) => {
 
         <div className="flex items-center gap-3 justify-center py-2">
           {/* Amount */}
-          {orderForm.amount === 1 ? (
-            <SecondaryButton text="-" color="opacity-20" />
+          {orderUpdateForm.amount === 1 ? (
+            <SecondaryButton type="button" text="-" color="opacity-20" />
           ) : (
             <SecondaryButton func={hdlDecreaseAmount} type="button" text="-" />
           )}
           <Heading
-            text={orderForm.amount}
-            value={orderForm.amount}
+            text={orderUpdateForm.amount}
+            value={orderUpdateForm.amount}
             color="primary"
             fontSize="16"
             fontWeight="semibold"

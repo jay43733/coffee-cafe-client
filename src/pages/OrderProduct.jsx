@@ -57,7 +57,6 @@ const OrderProduct = () => {
         </div>
         <div className="flex-[0.2]">
           <UserRightSideBar />
-          {/* <button type="button" onClick={hdlClickProduct}>Test</button> */}
         </div>
         <dialog
           id="order-product"

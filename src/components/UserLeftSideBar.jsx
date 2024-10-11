@@ -21,7 +21,7 @@ export default function UserLeftSideBar() {
       <div className="flex flex-col h-full justify-between">
           <div className="flex flex-col gap-10 ">
             <Link to="/user">
-              <span className="flex items-center gap-4 px-4 py-2 rounded-md hover:bg-[#6E5357] active:bg-[#FFFFFF] active:text-[#251C1D] ">
+              <span className="flex items-center gap-4 px-4 py-2 rounded-md hover:bg-[#6E5357] ">
                 <HomeIcon size={32} color="white" />
                 <Heading
                   text="Home"
@@ -32,7 +32,7 @@ export default function UserLeftSideBar() {
               </span>
             </Link>
             <Link to="/user/order">
-              <span className="flex items-center gap-4 px-4 py-2 rounded-md hover:bg-[#6E5357] active:bg-[#FFFFFF] active:text-[#251C1D] ">
+              <span className="flex items-center gap-4 px-4 py-2 rounded-md hover:bg-[#6E5357]">
                 <ShoppingBag size={32} color="white" />
                 <Heading
                   text="Order Now"
