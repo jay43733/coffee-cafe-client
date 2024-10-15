@@ -10,7 +10,7 @@ import UserLeftSideBar from "../components/UserLeftSideBar";
 
 const OrderLayout = () => {
   return (
-    <div className="w-full">
+    <div className="w-full max-w-[1844px] mx-auto">
       <div className="flex min-w-full items-center justify-between">
         <Logo />
         <UserBanner />
@@ -23,9 +23,7 @@ const OrderLayout = () => {
         </div>
 
         {/* Content Area */}
-        <div className="flex-[0.8] pl-12 ">
           <Outlet />
-        </div>
       </div>
     </div>
   );

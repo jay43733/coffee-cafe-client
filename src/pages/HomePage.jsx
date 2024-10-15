@@ -18,19 +18,19 @@ export default function HomePage() {
   }, []);
 
   return (
-    <div className=" flex w-full gap-12">
+    <div className="flex w-full gap-12">
       {/* Left */}
       <div className="flex flex-[0.2]">
         <LeftSideBar />
       </div>
       {/* Center */}
-      <div className="flex flex-col gap-5 flex-[0.6] flex-grow">
+      <div className="flex flex-col min-w-[1084px] gap-5 flex-[0.6]">
         {products.map((item, index) => (
           <Carousal key={index} item={item} />
         ))}
       </div>
       {/* Right */}
-      <div className="flex-[0.3] ">
+      <div className="flex-[0.2] ">
         <RightSideBar />
       </div>
     </div>

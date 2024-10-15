@@ -28,7 +28,7 @@ export default function ListMenu({ item }) {
 
   return (
     <div>
-      <div className="flex py-4 px-6 my-4 justify-between overflow-auto cursor-pointer w-full h-fit bg-white rounded-2xl hover:duration-300 hover:shadow-inner">
+      <div className="flex py-4 my-4 justify-between overflow-auto cursor-pointer w-full h-fit bg-white rounded-2xl hover:duration-300 hover:shadow-inner">
         <div className="flex items-center">
           <img src={item?.products?.image} alt="product image" width="40px" />
         </div>

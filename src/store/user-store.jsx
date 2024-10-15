@@ -10,10 +10,7 @@ const useUserStore = create(
       token: null,
       actionRegister: async (form) => {
         try {
-          const resp = await axios.post(
-            "http://localhost:8080/register",
-            form
-          );
+          const resp = await axios.post("http://localhost:8080/register", form);
           console.log(resp, "Register");
           // toast.success(resp.data.message);
         } catch (error) {
@@ -23,18 +20,15 @@ const useUserStore = create(
       },
       actionLogin: async (form) => {
         try {
-          const resp = await axios.post(
-            "http://localhost:8080/login",
-            form
-          );
-          console.log(resp.data.user, "Login")
-          
+          const resp = await axios.post("http://localhost:8080/login", form);
+          console.log(resp.data.user, "Login");
+
           toast.success(`Welcome ${resp.data.user.user.firstName}`);
           set({
             user: resp.data.user,
             token: resp.data.accessToken,
           });
-          return 'success'
+          return "success";
         } catch (error) {
           console.log(error.response.data);
           toast.error(error.response.data.error);
@@ -44,6 +38,19 @@ const useUserStore = create(
       actionLogout: () => {
         localStorage.clear();
         set({ user: null, token: null });
+      },
+      actionEditProfile: async (form, token) => {
+        try {
+          const resp = await axios.patch("http://localhost:8080/edit", form, {
+            headers: { Authorization: `Bearer ${token}` },
+          });
+          // console.log(resp.data.newProfile, "resp")
+          set((state) => ({
+            user: { ...resp.data?.newProfile },
+          }));
+        } catch (error) {
+          console.log(error);
+        }
       },
     }),
     {

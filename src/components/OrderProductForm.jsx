@@ -168,7 +168,7 @@ export const OrderProductForm = ({ currentItem }) => {
         <div className="flex items-center gap-3 justify-center py-2">
           {/* Amount */}
           {orderForm.amount === 1 ? (
-            <SecondaryButton text="-" color="opacity-20" />
+            <SecondaryButton type="button" text="-" color="opacity-20" />
           ) : (
             <SecondaryButton func={hdlDecreaseAmount} type="button" text="-" />
           )}

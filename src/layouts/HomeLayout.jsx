@@ -8,8 +8,8 @@ import Banner from "../components/LoginButton";
 
 const HomeLayout = () => {
   return (
-    <div className="w-full">
-      <div className="flex min-w-full items-center justify-between">
+    <div className="max-w-[1844px] mx-auto">
+      <div className="flex items-center justify-between">
         <Logo />
         <Banner />
       </div>

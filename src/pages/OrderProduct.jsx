@@ -44,10 +44,10 @@ const OrderProduct = () => {
 
   return (
     <>
-      <div className="flex">
-        <div className="flex-[0.8]">
+      <div className="flex w-full gap-12">
+        <div className="flex-[0.7] min-w-[1080px] pl-12">
           <NavBar setSelectedCategory={setSelectedCategory} />
-          <div className="flex flex-wrap p-4 gap-6 w-full">
+          <div className="flex flex-wrap px-6 py-4 gap-6 w-full">
             {filteredProducts.map((item, index) => (
               <div key={item.id} onClick={() => hdlClickProduct(item)}>
                 <ProductCard key={item.id} item={item} />
@@ -55,7 +55,7 @@ const OrderProduct = () => {
             ))}
           </div>
         </div>
-        <div className="flex-[0.2]">
+        <div className="flex-[0.3] ">
           <UserRightSideBar />
         </div>
         <dialog

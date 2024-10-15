@@ -12,6 +12,7 @@ import OrderLayout from "../layouts/OrderLayout"
 import OrderHomePage from "../pages/OrderHomePage";
 import OrderProductStatus from "../pages/OrderProductStatus";
 import useUserStore from "../store/user-store";
+import UserProfile from "../pages/UserProfile";
 
 const guestRouter = createBrowserRouter([
   {
@@ -25,9 +26,10 @@ const guestRouter = createBrowserRouter([
   },
   {
     path: "/user",
-    element: <ProtectRouter element={<OrderLayout/>} allow={["USER"]}/>,
+    element: <ProtectRouter element={<OrderLayout/>} allow={["USER","ADMIN"]}/>,
     children: [
-      { index:true, element: <ProtectRouter element={<OrderHomePage/>} allow={["USER"]} />},
+      { index:true, element: <ProtectRouter element={<OrderHomePage/>} allow={["USER","ADMIN"]} />},
+      { path: "profile", element: <UserProfile /> },
       { path: "order", element: <OrderProduct /> },
       { path: "order/status", element: <OrderProductStatus /> },
       { path: "*", element: <Navigate to = "/user" /> },

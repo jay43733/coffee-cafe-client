@@ -6,8 +6,8 @@ import SecondaryButton from "./Button/SecondaryButton";
 
 export default function RightSideBar() {
   return (
-    <div className="px-8 py-10 flex flex-col bg-white rounded-2xl min-h-[90vh] max-w-[540px] min-w-[400px]  justify-between">
-      <div className="my-2 flew-grow">
+    <div className="px-8 py-10 flex flex-col bg-white rounded-2xl h-full max-w-[400px] min-w-[364px] justify-between">
+      <div className="my-2 min-h-[90vh]">
         <div className="flex flex-col gap-6">
           <Heading
             text="Order 000"

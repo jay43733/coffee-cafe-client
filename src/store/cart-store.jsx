@@ -29,8 +29,19 @@ const useCartStore = create(
         carts: state.carts.filter((item) => item.id !== id),
       }));
     },
+    actionDeleteAllCart: async (token, id) => {
+      const resp = await axios.delete(
+        `http://localhost:8080/cart/deleteCart/${id}`,
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
+      // set((state) => ({
+      //   carts: state.carts.filter((item) => item.userId !== id),
+      // }));
+    },
     actionUpdateCart: async (form, token, id) => {
-      console.log(form)
+      // console.log(form);
       const resp = await axios.patch(`http://localhost:8080/cart/${id}`, form, {
         headers: { Authorization: `Bearer ${token}` },
       });

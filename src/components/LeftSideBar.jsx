@@ -28,7 +28,7 @@ export default function LeftSideBar() {
             onClick={() => document.getElementById("need-login").showModal()}
             className="flex items-center gap-4 px-4 py-2 rounded-md hover:bg-[#6E5357] cursor-pointer  "
           >
-            <ShoppingBag size={32} color="white" />
+            <ShoppingBag size={24} color="white" />
             <Heading
               text="Order Now"
               fontSize={18}
@@ -40,7 +40,7 @@ export default function LeftSideBar() {
             onClick={() => document.getElementById("need-login").showModal()}
             className="flex items-center gap-3 px-4 py-2 rounded-md hover:bg-[#6E5357] cursor-pointer"
           >
-            <StarsIcon size={32} color="white" />
+            <StarsIcon size={24} color="white" />
             <Heading
               text="Status"
               fontSize={18}

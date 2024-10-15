@@ -9,7 +9,7 @@ export default function UserBanner() {
   return (
     <div className="flex items-baseline gap-2 px-4 py-4 rounded-[16px] bg-[#D79E9E] text-center">
       <Heading
-        text={`Hello, ${user.user.firstName}`}
+        text={`Hello, ${user?.user.firstName}`}
         fontSize="24"
         fontWeight="bold"
         color="primary"

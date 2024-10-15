@@ -27,7 +27,7 @@ export const OrderProductUpdateForm = () => {
   });
 
   const data = [
-    { id: 1, text: "0%", value: "NOSUGAR" },
+    { id: 1, text: "0%", value: "S0" },
     { id: 2, text: "25%", value: "S25" },
     { id: 3, text: "50%", value: "S50" },
     { id: 4, text: "75%", value: "S75" },

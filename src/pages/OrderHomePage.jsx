@@ -16,19 +16,18 @@ export default function OrderHomePage() {
   useEffect(() => {
     actionGetAllProduct();
   }, []);
-  // console.log(products)
-  // console.log(recommendedProducts)
+
   return (
     <>
       <div className="flex w-full gap-12">
         {/* Center */}
-        <div className="flex flex-col gap-6 items-center flex-1">
+        <div className="flex pl-12 basis-[0.5] flex-col gap-6 items-center flex-1">
           {recommendedProducts.map((item, index) => (
             <Carousal key={index} item={item} />
           ))}
         </div>
         {/* Right */}
-        <div className="flex-[0.3] ">
+        <div className="basis-[0.3]">
           <UserRightSideBar />
         </div>
       </div>
