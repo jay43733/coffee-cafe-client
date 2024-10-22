@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Heading from "./Typography/Heading";
 import ModalButton from "./Button/ModalButton";
 import Input from "./Input";
@@ -8,11 +8,13 @@ import useUserStore from "../store/user-store";
 import useCartStore from "../store/cart-store";
 import { toast } from "react-toastify";
 
-export const OrderProductForm = ({ currentItem }) => {
+export const OrderProductForm = () => {
   //Import From Zustand
-  const token = useUserStore((state) => state.token);
   const actionAddCart = useCartStore((state) => state.actionAddCart);
   const actionGetCart = useCartStore((state)=>state.actionGetCart)
+  const currentItem = useCartStore((state)=>state.currentItem)
+  const setCurrentItem = useCartStore((state)=>state.setCurrentItem)
+
 
   const [orderForm, setOrderForm] = useState({
     productId: currentItem.id,
@@ -33,6 +35,7 @@ export const OrderProductForm = ({ currentItem }) => {
 
   const hdlCloseModal = () => {
     document.getElementById("order-product").close();
+    setCurrentItem(null)
   };
 
   const hdlOrderOption = (e) => {
@@ -59,8 +62,8 @@ export const OrderProductForm = ({ currentItem }) => {
   const hdlSendToCart = async (e) => {
     try {
       e.preventDefault();
-      await actionAddCart(orderForm, token);
-      await actionGetCart(token)
+      await actionAddCart(orderForm);
+      await actionGetCart()
       e.target.closest("dialog").close();
     } catch (error) {
       const errorMessage = error.response?.data?.error || error.message;
@@ -68,7 +71,6 @@ export const OrderProductForm = ({ currentItem }) => {
       console.log(errorMessage);
     }
   };
-
   return (
     <form onSubmit={hdlSendToCart}>
       <div className="p-8 flex flex-col items-center gap-1 ">

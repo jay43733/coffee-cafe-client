@@ -1,15 +1,15 @@
-import axios from "axios";
+import axios from "../config/axios";
 import { QrCode } from "lucide-react";
+import { toast } from "react-toastify";
 import { create } from "zustand";
 
 const useOrderStore = create((set) => ({
   orders: [],
+  allOrders : [],
   currentOrder: null,
-  actionAddOrder: async (form, token) => {
+  actionAddOrder: async (form) => {
     try {
-      const resp = await axios.post("http://localhost:8080/order/add", form, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      const resp = await axios.post("/order/add", form);
       set((state) => ({
         orders: [{ ...resp.data }, ...state.orders],
       }));
@@ -17,27 +17,47 @@ const useOrderStore = create((set) => ({
       console.log(error);
     }
   },
-  actionGetOrder: async (token) => {
+  actionGetOrder: async () => {
     try {
-      const resp = await axios.get("http://localhost:8080/order/getOrder", {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      const resp = await axios.get("/order/getOrder");
       set({ orders: resp.data.allOrder });
     } catch (error) {
       console.log(error);
     }
   },
-  actionGetOrderItemById: async (orderId, token) => {
+
+  actionGetAllOrder: async () => {
+    try {
+      const resp = await axios.get("/order/getAllOrder");
+      set({ allOrders: resp.data.allOrder });
+    } catch (error) {
+      console.log(error);
+    }
+  },
+  actionGetOrderItemById: async (orderId) => {
     try {
       const resp = await axios.get(
-        `http://localhost:8080/order/getOrder/${orderId}`,
-        {
-          headers: { Authorization: `Bearer ${token}` },
-        }
+        `/order/getOrder/${orderId}`
       );
       return resp.data.orderItem;
     } catch (error) {
       console.log(error);
+    }
+  },
+  actionConfirmOrder : async(orderId) =>{
+    try{
+      const resp = await axios.patch(`/order/confirmOrder/${orderId}`)
+      toast.success("Order Completed !")
+    }catch(error){
+      toast.error(error.response.data.error)
+    }
+  },
+  actionCancelOrder : async(orderId) =>{
+    try{
+      const resp = await axios.patch(`/order/cancelOrder/${orderId}`)
+      console.log(resp)
+    }catch(error){
+      toast.error(error.response.data.error)
     }
   },
 }));

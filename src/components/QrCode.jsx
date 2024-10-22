@@ -1,14 +1,22 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Heading from "./Typography/Heading";
 import PrimaryButton from "./Button/PrimaryButton";
-import { UploadCloudIcon } from "lucide-react";
+import { Banknote, CreditCardIcon, UploadCloudIcon } from "lucide-react";
 import SecondaryButton from "./Button/SecondaryButton";
 import useOrderStore from "../store/order-store";
 import useCartStore from "../store/cart-store";
 import useUserStore from "../store/user-store";
 import { useNavigate } from "react-router-dom";
 
-const QrCode = ({ totalPrice, uploadImage, setUploadImage }) => {
+const QrCode = ({
+  totalPrice,
+  uploadImage,
+  setUploadImage,
+  isPaid,
+  setIsPaid,
+  isClicked,
+  setIsClicked,
+}) => {
   const actionAddOrder = useOrderStore((state) => state.actionAddOrder);
   const actionDeleteAllCart = useCartStore(
     (state) => state.actionDeleteAllCart
@@ -16,17 +24,12 @@ const QrCode = ({ totalPrice, uploadImage, setUploadImage }) => {
   const actionGetCart = useCartStore((state) => state.actionGetCart);
   const user = useUserStore((state) => state.user);
   const carts = useCartStore((state) => state.carts);
-  const token = useUserStore((state) => state.token);
-
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
   const hdFileChange = (e) => {
-    // e.stopPropagation();
     setUploadImage(e.target.files[0]);
   };
-
-  // console.log(uploadImage, "Image");
 
   const hdlAddOrder = async (e) => {
     try {
@@ -34,20 +37,32 @@ const QrCode = ({ totalPrice, uploadImage, setUploadImage }) => {
       const newOrder = { carts, totalPrice: totalPrice };
       const body = new FormData();
       body.append("order", JSON.stringify(newOrder));
+      body.append("paymentMethod", isPaid);
       if (uploadImage) {
         body.append("image", uploadImage);
       }
-      await actionAddOrder(body, token);
-      await actionDeleteAllCart(token, user.user.id);
-      await actionGetCart(token);
+      await actionAddOrder(body);
+      await actionDeleteAllCart(user?.id);
+      await actionGetCart();
       await e.target.closest("dialog").close();
-      await navigate("/user/order/status");
+
+      if (user.role === "ADMIN") {
+        return navigate("/user/order/status");
+      } else {
+        return navigate("/user/admin/status");
+      }
     } catch (error) {
       console.log(error);
     } finally {
       setLoading(false);
     }
   };
+
+  const hdlClick = (value) => {
+    setIsClicked(value);
+    setIsPaid(value);
+  };
+
 
   const nameImage = uploadImage ? uploadImage?.name : "No Image";
 
@@ -61,14 +76,17 @@ const QrCode = ({ totalPrice, uploadImage, setUploadImage }) => {
           loading && "opacity-20"
         }`}
       >
-        <img
-          className="rounded-xl"
-          src="https://res.cloudinary.com/dp7ggau3r/image/upload/v1728632012/nup0k3lggdohjq1ukiup.jpg"
-          alt="QRCode"
-          width="240px"
-        />
+        {user.role === "USER" && (
+          <img
+            className="rounded-xl"
+            src="https://res.cloudinary.com/dp7ggau3r/image/upload/v1728632012/nup0k3lggdohjq1ukiup.jpg"
+            alt="QRCode"
+            width="240px"
+          />
+        )}
+
         <div className="flex items-baseline gap-2">
-          {uploadImage ? (
+          {uploadImage || isPaid ? (
             <Heading
               text={`${totalPrice.toLocaleString("en-US")}`}
               fontSize="32"
@@ -91,38 +109,68 @@ const QrCode = ({ totalPrice, uploadImage, setUploadImage }) => {
             fontWeight="regular"
           />
         </div>
-        <div className="flex flex-col gap-2 px-10 py-6 rounded-2xl border-dashed border-[2px] border-opacity-20 border-[#251C1D]">
-          <input
-            type="file"
-            className="opacity-0"
-            id="image-file"
-            onChange={hdFileChange}
-          />
-          <SecondaryButton
-            func={() => document.getElementById("image-file").click()}
-            text="Upload Slip"
-            Icon={() => (
-              <UploadCloudIcon size="28" color="#251C1D" strokeWidth="2" />
+        {user.role === "USER"  ? (
+          <div className="flex flex-col gap-2 px-10 py-6 rounded-2xl border-dashed border-[2px] border-opacity-20 border-[#251C1D]">
+            <input
+              type="file"
+              className="opacity-0"
+              id="image-file"
+              onChange={hdFileChange}
+            />
+            <SecondaryButton
+              func={() => document.getElementById("image-file").click()}
+              text="Upload Slip"
+              Icon={() => (
+                <UploadCloudIcon size="28" color="#251C1D" strokeWidth="2" />
+              )}
+            />
+            {uploadImage ? (
+              <Heading
+                text={nameImage}
+                fontSize="16"
+                color="primary"
+                fontWeight="bold"
+              />
+            ) : (
+              <Heading
+                text="Snap a pic of your receipt to enjoy your drink!"
+                fontSize="16"
+                color="secondary"
+                fontWeight="semiBold"
+              />
             )}
-          />
-          {uploadImage ? (
+          </div>
+        ) : (
+          <div className="flex flex-col gap-4 pb-10">
             <Heading
-              text={nameImage}
-              fontSize="16"
-              color="primary"
-              fontWeight="bold"
-            />
-          ) : (
-            <Heading
-              text="Snap a pic of your receipt to enjoy your drink!"
-              fontSize="16"
+              text="Pay with"
               color="secondary"
-              fontWeight="semiBold"
+              fontSize={14}
+              fontWeight="regular"
             />
-          )}
-        </div>
-        {uploadImage && (
-          <PrimaryButton onClick={(e) => hdlAddOrder(e)} text="Confirm" />
+            <div className="flex flex-col gap-2">
+              <SecondaryButton
+                text="CASH"
+                Icon={() => <Banknote />}
+                func={() => hdlClick("CASH")}
+                isClicked={isClicked}
+                color={"text-sm"}
+              />
+              <SecondaryButton
+                text="CREDIT"
+                Icon={() => <CreditCardIcon />}
+                func={() => hdlClick("CREDIT")}
+                isClicked={isClicked}
+                color={"text-sm "}
+              />
+            </div>
+          </div>
+        )}
+
+        {(uploadImage || isPaid === "CASH" || isPaid === "CREDIT") && (
+          <div className="w-full">
+            <PrimaryButton onClick={(e) => hdlAddOrder(e)} text="Confirm" />
+          </div>
         )}
       </div>
     </div>

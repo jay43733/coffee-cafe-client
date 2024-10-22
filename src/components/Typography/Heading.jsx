@@ -27,7 +27,8 @@ const colorMap = {
   white: "text-white",
   brown: "text-[#7A5C61]",
   red: "text-[#EC0357]",
-  green: "text-[#18B473]"
+  green: "text-[#18B473]",
+  pink: "text-[#CF9CA5]"
 }
 
 export default function Heading ({text, fontSize,fontWeight, color = "primary" }) {

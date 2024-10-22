@@ -6,7 +6,9 @@ import PrimaryButton from "../components/Button/PrimaryButton";
 import SecondaryButton from "../components/Button/SecondaryButton";
 import Heading from "../components/Typography/Heading";
 import useUserStore from "../store/user-store";
-import validator from "../utils/validator"
+import validator from "../utils/validator";
+import { ChevronLeft, MoveLeftIcon } from "lucide-react";
+import TertiaryButton from "../components/Button/TertiaryButton";
 
 const Login = () => {
   const actionLogin = useUserStore((state) => state.actionLogin);
@@ -34,23 +36,28 @@ const Login = () => {
     //Validate User
     const error = validator.validateLogin(form);
     if (error) {
-      return navigate("/login")
+      return navigate("/login");
     }
 
     //Send to Front
     await actionLogin(form);
-    // res === "success" ? navigate("/user") : '';
     setForm(initialForm);
-    
-    navigate("/user")
+    navigate("/user");
   };
 
   function hdlGotoRegister() {
     navigate("/register");
   }
 
+  function hdlGoToHome() {
+    navigate("/")
+  }
+
   return (
-    <div className="flex flex-col p-20 w-full h-full min-w-[1000px] bg-white gap-6 rounded-[64px] shadow-lg">
+    <div className="flex flex-col p-20 w-full h-full relative min-w-[1000px] bg-white gap-6 rounded-[64px] shadow-lg">
+      <div className="absolute top-10 left-10">
+      <TertiaryButton text="HOMEPAGE" Icon={()=><ChevronLeft color="#716B6C" size={20} /> } func={hdlGoToHome}  />
+      </div>
       <div className="py-4 flex flex-col gap-6 items-center">
         <img src={chocolateDrink} alt="chocolate-drink" className="w-[100px]" />
         <Heading
@@ -92,8 +99,10 @@ const Login = () => {
               </span>
             )}
           </div>
-          <PrimaryButton text="LOG IN" />
-          <SecondaryButton text="REGISTER" func={hdlGotoRegister} />
+          <div className="flex flex-col gap-2">
+            <PrimaryButton text="LOG IN" />
+            <SecondaryButton text="REGISTER" func={hdlGotoRegister} />
+          </div>
         </form>
       </div>
     </div>

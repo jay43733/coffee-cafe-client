@@ -8,12 +8,8 @@ import useUserStore from "../store/user-store";
 import useOrderStore from "../store/order-store";
 import QrCode from "./QrCode";
 
-import { ImagePlusIcon } from "lucide-react";
-// import qrCode from "../../../Product Image/QRcode"
-
 export default function UserRightSideBar() {
   const carts = useCartStore((state) => state.carts);
-  const token = useUserStore((state) => state.token);
   const user = useUserStore((state) => state.user);
   const actionGetCart = useCartStore((state) => state.actionGetCart);
   const actionDeleteAllCart = useCartStore(
@@ -29,8 +25,8 @@ export default function UserRightSideBar() {
   const [uploadImage, setUploadImage] = useState(null);
 
   const hdlResetOrder = async (id) => {
-    await actionDeleteAllCart(token, id);
-    await actionGetCart(token);
+    await actionDeleteAllCart(id);
+    await actionGetCart();
   };
 
   const hdlConfirmOrder = async () => {
@@ -38,14 +34,17 @@ export default function UserRightSideBar() {
     document.getElementById("pay-bill").showModal();
   };
 
+  const [isPaid, setIsPaid] = useState("");
+  const [isClicked, setIsClicked] = useState("");
+
   useEffect(() => {
-    actionGetCart(token);
+    actionGetCart();
   }, []);
 
   return (
-    <div className="h-full">
-      <div className="px-8 py-10 flex flex-col bg-white rounded-2xl w-full h-full max-w-[400px] min-w-[364px] justify-between">
-        <div className="my-2 min-h-[90vh]">
+    <div className="h-full fixed max-h-[828px]">
+      <div className="sticky top-4 z-10 px-8 py-10 flex flex-col bg-white rounded-2xl w-full max-w-[400px] min-w-[364px] h-full justify-between shadow-md">
+        <div className="my-2 min-h-[400px] max-h-[540px]">
           <div className="flex flex-col gap-6">
             <Heading
               text="My Cart"
@@ -60,9 +59,11 @@ export default function UserRightSideBar() {
               color="primary"
             />
           </div>
-          {carts.map((item, index) => (
-            <ListMenu key={index} item={item} />
-          ))}
+          <div className="min-h-[400px] max-h-[400px] overflow-auto">
+            {carts.map((item, index) => (
+              <ListMenu key={index} item={item} />
+            ))}
+          </div>
         </div>
         <div className="flex flex-col gap-7">
           <div className="flex flex-col gap-2">
@@ -87,7 +88,7 @@ export default function UserRightSideBar() {
               <SecondaryButton
                 type="button"
                 text="Reset Orders"
-                func={() => hdlResetOrder(user.user.id)}
+                func={() => hdlResetOrder(user.id)}
               />
             </div>
           )}
@@ -98,6 +99,8 @@ export default function UserRightSideBar() {
         className="modal"
         onClose={() => {
           setUploadImage(null);
+          setIsPaid("")
+          setIsClicked("")
         }}
       >
         <div className="modal-box">
@@ -112,6 +115,10 @@ export default function UserRightSideBar() {
             totalPrice={totalPrice}
             uploadImage={uploadImage}
             setUploadImage={setUploadImage}
+            isPaid={isPaid}
+            setIsPaid={setIsPaid}
+            isClicked={isClicked}
+            setIsClicked={setIsClicked}
           />
         </div>
       </dialog>

@@ -84,6 +84,66 @@ const editProfileSchema = Joi.object({
     .allow(""),
 });
 
+const addProductSchema = Joi.object({
+  name: Joi.string().min(3).max(50).required().messages({
+    "string.empty": "Please type product name",
+  }),
+  price: Joi.number().positive().precision(2).required().messages({
+    "number.base": "Price must be a valid number",
+    "number.positive": "Price must be a positive number",
+    "any.required": "Price is required",
+  }),
+  description: Joi.string().min(10).max(500).required().messages({
+    "string.empty": "Description is required",
+    "string.min": "Description should have at least 10 characters",
+    "string.max": "Description should have a maximum of 500 characters",
+  }),
+  product_categoryId: Joi.string().required().messages({
+    "string.empty": "Product Category is required",
+    "any.required": "Product category is required",
+  }),
+  isRecommended: Joi.boolean().allow(false),
+});
+
+const editProductSchema = Joi.object({
+  name: Joi.string().min(3).max(50).required().messages({
+    "string.empty": "Please type product name",
+  }),
+  price: Joi.number()
+    .custom((value, helpers) => {
+      const valueString = value.toString();
+      // Check for spaces in the price input
+      if (/\s/.test(valueString)) {
+        return helpers.error("number.whitespace");
+      }
+      // Check for leading zeros in a non-decimal number
+      if (/^0\d/.test(valueString)) {
+        return helpers.error("number.leadingZero");
+      }
+      return value; // Valid number
+    })
+    .positive()
+    .precision(2)
+    .required()
+    .messages({
+      "number.base": "Price must be a valid number",
+      "number.positive": "Price must be a positive number",
+      "number.whitespace": "Price cannot contain spaces",
+      "number.leadingZero": "Price cannot have leading zeros",
+      "any.required": "Price is required",
+    }),
+  description: Joi.string().min(10).max(500).required().messages({
+    "string.empty": "Description is required",
+    "string.min": "Description should have at least 10 characters",
+    "string.max": "Description should have a maximum of 500 characters",
+  }),
+  product_categoryId: Joi.number().required().messages({
+    "string.empty": "Product Category is required",
+    "any.required": "Product category is required",
+  }),
+  isRecommended: Joi.boolean().allow(false),
+});
+
 const validateRegister = (input) => {
   const { error } = registerSchema.validate(input, {
     abortEarly: false,
@@ -129,8 +189,40 @@ const validateEditProfile = (input) => {
   return null; //If there is no error, nothing to show out
 };
 
+const validateAddProduct = (input) => {
+  const { error } = addProductSchema.validate(input, {
+    abortEarly: false,
+  });
+
+  if (error) {
+    const formatError = error.details.reduce((prev, curr) => {
+      prev[curr.path[0]] = curr.message;
+      return prev;
+    }, {});
+    return formatError;
+  }
+  return null;
+};
+
+const validateEditProduct = (input) => {
+  const { error } = editProductSchema.validate(input, {
+    abortEarly: false,
+  });
+
+  if (error) {
+    const formatError = error.details.reduce((prev, curr) => {
+      prev[curr.path[0]] = curr.message;
+      return prev;
+    }, {});
+    return formatError;
+  }
+  return null;
+};
+
 export default {
   validateRegister,
   validateLogin,
   validateEditProfile,
+  validateAddProduct,
+  validateEditProduct,
 };

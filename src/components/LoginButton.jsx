@@ -7,7 +7,7 @@ export default function LoginButton() {
   return (
     <div>
       <Link to="/login">
-        <div className="flex gap-2 py-4 px-4 rounded-[16px] hover:opacity-70 shadow-md bg-[#D79E9E] justify-center">
+        <div className="flex gap-2 py-4 px-4 rounded-[16px] hover:bg-[#d79e9ecd] shadow-md bg-[#D79E9E] justify-center">
           <LogIn size={32} color="white" />
           <Heading
             text="Login & Order Now"

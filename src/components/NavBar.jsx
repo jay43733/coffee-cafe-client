@@ -15,7 +15,7 @@ export default function NavBar({ setSelectedCategory }) {
   };
 
   return (
-    <div className="flex justify-around w-full">
+    <div className="flex justify-around px-2 w-full">
       <div onClick={() => hdlSelectedCategory("")} className="flex-1 mx-4">
         <SecondaryButton
           isClicked={isClicked}

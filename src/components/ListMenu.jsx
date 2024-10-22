@@ -11,14 +11,12 @@ import DeleteButton from "./Button/DeleteButton";
 export default function ListMenu({ item }) {
   const actionDeleteCart = useCartStore((state) => state.actionDeleteCart);
   const actionGetCart = useCartStore((state) => state.actionGetCart);
-  const token = useUserStore((state) => state.token);
   const setCurrentCart = useCartStore((state) => state.setCurrentCart);
   const currentCart = useCartStore((state) => state.currentCart);
-  const [isOpen, setIsOpen] = useState(false);
 
   const hdlDeleteCart = async (id) => {
-    await actionDeleteCart(token, id);
-    await actionGetCart(token);
+    await actionDeleteCart(id);
+    await actionGetCart();
   };
 
   const hdlEditCart = async (item) => {

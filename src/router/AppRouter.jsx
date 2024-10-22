@@ -13,6 +13,9 @@ import OrderHomePage from "../pages/OrderHomePage";
 import OrderProductStatus from "../pages/OrderProductStatus";
 import useUserStore from "../store/user-store";
 import UserProfile from "../pages/UserProfile";
+import ProductManagement from "../pages/ProductManagement";
+import UserManagement from "../pages/UserManagement";
+import AdminProductStatus from "../pages/AdminProductStatus";
 
 const guestRouter = createBrowserRouter([
   {
@@ -26,15 +29,43 @@ const guestRouter = createBrowserRouter([
   },
   {
     path: "/user",
-    element: <ProtectRouter element={<OrderLayout/>} allow={["USER","ADMIN"]}/>,
+    element: <ProtectRouter element={<OrderLayout />} allow={["USER", "ADMIN", "SUPERADMIN"]} />, // Protect the parent route
     children: [
-      { index:true, element: <ProtectRouter element={<OrderHomePage/>} allow={["USER","ADMIN"]} />},
-      { path: "profile", element: <UserProfile /> },
-      { path: "order", element: <OrderProduct /> },
-      { path: "order/status", element: <OrderProductStatus /> },
-      { path: "*", element: <Navigate to = "/user" /> },
+      { 
+        index: true, 
+        element: <ProtectRouter element={<OrderHomePage />} allow={["USER", "ADMIN","SUPERADMIN"]} /> 
+      },
+      { 
+        path: "profile", 
+        element: <ProtectRouter element={<UserProfile />} allow={["USER", "ADMIN","SUPERADMIN"]} /> 
+      },
+      { 
+        path: "order", 
+        element: <ProtectRouter element={<OrderProduct />} allow={["USER", "ADMIN","SUPERADMIN"]} /> 
+      },
+      { 
+        path: "order/status", 
+        element: <ProtectRouter element={<OrderProductStatus />} allow={["USER"]} /> 
+      },
+      { 
+        path: "admin/status", 
+        element: <ProtectRouter element={<AdminProductStatus />} allow={["ADMIN","SUPERADMIN"]} /> // Only allow "ADMIN"
+      },
+      { 
+        path: "admin/product", 
+        element: <ProtectRouter element={<ProductManagement />} allow={["ADMIN","SUPERADMIN"]} /> // Only allow "ADMIN"
+      },
+      { 
+        path: "admin/user_management", 
+        element: <ProtectRouter element={<UserManagement />} allow={["ADMIN","SUPERADMIN"]} /> // Only allow "ADMIN"
+      },
+      { 
+        path: "*", 
+        element: <Navigate to="/user" /> 
+      },
     ],
-  },
+  }
+  
 ]);
 
 const AppRouter = () => {

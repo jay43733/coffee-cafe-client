@@ -7,18 +7,18 @@ import useUserStore from "../store/user-store";
 import validator from "../utils/validator";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
+import SecondaryButton from "../components/Button/SecondaryButton";
 
 const UserProfile = () => {
   const user = useUserStore((state) => state.user);
   const actionEditProfile = useUserStore((state) => state.actionEditProfile);
-  const token = useUserStore((state) => state.token);
 
   const navigate = useNavigate();
-    console.log(user);
+  // console.log(user);
   const [form, setForm] = useState({
-    firstName: user?.user.firstName || "",
-    lastName: user?.user.lastName || "",
-    phoneNumber: user?.user.phoneNumber || "",
+    firstName: user?.firstName || "",
+    lastName: user?.lastName || "",
+    phoneNumber: user?.phoneNumber || "",
   });
 
   const hdlChangeForm = (e) => {
@@ -31,17 +31,18 @@ const UserProfile = () => {
     if (error) {
       return setFormError(error);
     }
-    await actionEditProfile(form, token);
-    await navigate("/user");
-    await toast.success("Edit Profile Successfully");
+    await actionEditProfile(form);
+    setFormError(null)
+    setIsActive(false)
+    toast.success("Edit Profile Successfully");
   };
 
-  console.log(form, "form")
+  const [isActive, setIsActive] = useState(false);
   const [formError, setFormError] = useState({});
 
   return (
-    <div className="h-full flex justify-center flex-[0.6] px-12  items-center">
-      <div className="min-w-[1084px] flex-col px-10 py-16 bg-white rounded-[64px] flex">
+    <div className="h-full flex justify-start pl-12 flex-[0.6] items-start">
+      <div className="min-w-[1148px] flex-col px-10 py-10 bg-white rounded-[64px] flex">
         <div className="flex flex-col gap-6 justify-center items-center flex-1">
           <img
             src={chocolateDrink}
@@ -61,12 +62,13 @@ const UserProfile = () => {
               label="Firstname"
               placeholder="Firstname"
               name="firstName"
-              value={form.firstName}
+              value={form?.firstName}
               onChange={hdlChangeForm}
+              disabled={!isActive}
             />
-            {formError.firstName && (
+            {formError?.firstName && (
               <span className="text-[#EC0357] text-[14px] font-normal">
-                {formError.firstName}
+                {formError?.firstName}
               </span>
             )}
           </div>
@@ -75,12 +77,13 @@ const UserProfile = () => {
               label="Lastname"
               placeholder="Lastname"
               name="lastName"
-              value={form.lastName}
+              value={form?.lastName}
               onChange={hdlChangeForm}
+              disabled={!isActive}
             />
-            {formError.lastName && (
+            {formError?.lastName && (
               <span className="text-[#EC0357] text-[14px] font-normal">
-                {formError.lastName}
+                {formError?.lastName}
               </span>
             )}
           </div>
@@ -89,17 +92,24 @@ const UserProfile = () => {
               label="Phone number (optional)"
               placeholder="08X-XXX-XXXX"
               name="phoneNumber"
-              value={form.phoneNumber}
+              value={form?.phoneNumber}
               onChange={hdlChangeForm}
+              disabled={!isActive}
             />
-            {formError.phoneNumber && (
+            {formError?.phoneNumber && (
               <span className="text-[#EC0357] text-[14px] font-normal">
-                {formError.phoneNumber}
+                {formError?.phoneNumber}
               </span>
             )}
           </div>
-
-          <PrimaryButton type="submit" text="CONFIRM" />
+          {isActive === false && (
+            <SecondaryButton
+              text="Edit"
+              type="button"
+              func={() => setIsActive(true)}
+            />
+          )}
+          {isActive === true && <PrimaryButton type="submit" text="CONFIRM" />}
         </form>
       </div>
     </div>

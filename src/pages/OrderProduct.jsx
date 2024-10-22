@@ -4,20 +4,22 @@ import UserRightSideBar from "../components/UserRightSideBar";
 import ProductCard from "../components/ProductCard";
 import useProductStore from "../store/product-store";
 import { OrderProductForm } from "../components/OrderProductForm";
+import useCartStore from "../store/cart-store";
 
 const OrderProduct = () => {
-  const [isOpen, setIsOpen] = useState(false);
   const products = useProductStore((state) => state.products);
-  const actionGetAllProduct = useProductStore(
-    (state) => state.actionGetAllProduct
+  const actionGetProduct = useProductStore(
+    (state) => state.actionGetProduct
   );
+  const currentItem = useCartStore((state)=>state.currentItem)
+  const setCurrentItem = useCartStore((state)=>state.setCurrentItem)
 
   //UseState
   const [selectedCategory, setSelectedCategory] = useState("");
-  const [currentItem, setCurrentItem] = useState({});
+  // Move to Zustand!!!
 
   useEffect(() => {
-    actionGetAllProduct();
+    actionGetProduct();
   }, []);
 
   let filteredProducts;
@@ -36,18 +38,16 @@ const OrderProduct = () => {
 
   const hdlClickProduct = (item) => {
     setCurrentItem(item);
-    setIsOpen(true);
     document.getElementById("order-product").showModal();
   };
 
-  // console.log(currentItem)
 
   return (
     <>
-      <div className="flex w-full gap-12">
-        <div className="flex-[0.7] min-w-[1080px] pl-12">
+      <div className="flex w-full gap-12 min-h-[800px] ">
+        <div className="flex-[0.7] min-w-[1148px] pl-12">
           <NavBar setSelectedCategory={setSelectedCategory} />
-          <div className="flex flex-wrap px-6 py-4 gap-6 w-full">
+          <div className="flex flex-wrap px-6 py-4 justify-start gap-4 items-start w-full">
             {filteredProducts.map((item, index) => (
               <div key={item.id} onClick={() => hdlClickProduct(item)}>
                 <ProductCard key={item.id} item={item} />
@@ -62,7 +62,7 @@ const OrderProduct = () => {
           id="order-product"
           className="modal"
           onClose={() => {
-            setIsOpen(false);
+            setCurrentItem(null);
           }}
         >
           <div className="modal-box">
@@ -73,7 +73,7 @@ const OrderProduct = () => {
             >
               ✕
             </button>
-            {isOpen && <OrderProductForm currentItem={currentItem} />}
+            {currentItem && <OrderProductForm />}
           </div>
         </dialog>
       </div>

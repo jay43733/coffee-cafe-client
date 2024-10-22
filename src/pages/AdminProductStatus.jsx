@@ -4,40 +4,39 @@ import useUserStore from "../store/user-store";
 import Heading from "../components/Typography/Heading";
 import OrderHistory from "../components/OrderHistory";
 import OrderRightSideBar from "../components/OrderRightSideBar";
+import NavBar from "../components/NavBar";
 import StatusNavBar from "../components/StatusNavBar";
 
-export default function OrderProductStatus() {
-  const actionGetOrder = useOrderStore((state) => state.actionGetOrder);
-  const orders = useOrderStore((state) => state.orders);
-  const actionGetOrderItemById = useOrderStore(
-    (state) => state.actionGetOrderItemById
-  );
-  const [selectedStatus, setSelectedStatus] = useState("");
+export default function AdminProductStatus() {
+  const actionGetAllOrder = useOrderStore((state)=>state.actionGetAllOrder)
+  const actionGetOrderItemById = useOrderStore((state)=>state.actionGetOrderItemById)
+  const allOrders = useOrderStore((state)=>state.allOrders)
   const [currentOrder, setCurrentOrder] = useState(null);
+  const [selectedStatus, setSelectedStatus] = useState("");
 
-  const descOrders = orders.sort((a, b) => b.id - a.id);
+  const descOrders = allOrders.sort((a, b) => b.id - a.id);
 
   useEffect(() => {
-    actionGetOrder();
+    actionGetAllOrder();
   }, []);
 
-  
-  let filteredStatus
-  if(selectedStatus === "PENDING"){
-    filteredStatus = orders.filter((item)=>item.status === selectedStatus)
-  } else if(selectedStatus === "COMPLETED"){
-    filteredStatus = orders.filter((item)=>item.status === selectedStatus)
-  } else if(selectedStatus === "CANCELLED"){
-    filteredStatus = orders.filter((item)=>item.status === selectedStatus)
-  } else{
-    filteredStatus = orders
-  }
-  
 
   const hdlGetOrderById = async (orderId) => {
     const orderItem = await actionGetOrderItemById(orderId);
     setCurrentOrder(orderItem);
   };
+  
+  let filteredStatus
+  if(selectedStatus === "PENDING"){
+    filteredStatus = allOrders.filter((item)=>item.status === selectedStatus)
+  } else if(selectedStatus === "COMPLETED"){
+    filteredStatus = allOrders.filter((item)=>item.status === selectedStatus)
+  } else if(selectedStatus === "CANCELLED"){
+    filteredStatus = allOrders.filter((item)=>item.status === selectedStatus)
+  } else{
+    filteredStatus = allOrders
+  }
+
   
   return (
     <div className="flex min-h-[90vh] w-full gap-12">

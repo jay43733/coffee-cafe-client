@@ -1,55 +1,45 @@
-import axios from "axios";
+import axios from "../config/axios";
 import { create } from "zustand";
 import { createJSONStorage, persist } from "zustand/middleware";
 
-const useCartStore = create(
-  persist((set) => ({
+const useCartStore = create((set) => ({
     carts: [],
     currentCart: null,
-    actionAddCart: async (form, token) => {
-      const resp = await axios.post("http://localhost:8080/cart/add", form, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+    currentItem: null,
+    setCurrentItem : (item) =>{
+      set({currentItem: item})
+    },
+    actionAddCart: async (form) => {
+      const resp = await axios.post("/cart/add", form);
       set((state) => ({
         carts: [{ ...resp.data }, ...state.carts],
       }));
     },
-    actionGetCart: async (token) => {
-      const resp = await axios.get("http://localhost:8080/cart/getCart", {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+    actionGetCart: async () => {
+      const resp = await axios.get("/cart/getCart");
       // console.log(resp)
       set({ carts: resp.data.getCart });
     },
-    actionDeleteCart: async (token, id) => {
-      const resp = await axios.delete(`http://localhost:8080/cart/${id}`, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+    actionDeleteCart: async ( id) => {
+      const resp = await axios.delete(`/cart/${id}`);
       set((state) => ({
         carts: state.carts.filter((item) => item.id !== id),
       }));
     },
-    actionDeleteAllCart: async (token, id) => {
+    actionDeleteAllCart: async (id) => {
       const resp = await axios.delete(
-        `http://localhost:8080/cart/deleteCart/${id}`,
-        {
-          headers: { Authorization: `Bearer ${token}` },
-        }
+        `/cart/deleteCart/${id}`
       );
-      // set((state) => ({
-      //   carts: state.carts.filter((item) => item.userId !== id),
-      // }));
+  
     },
-    actionUpdateCart: async (form, token, id) => {
+    actionUpdateCart: async (form, id) => {
       // console.log(form);
-      const resp = await axios.patch(`http://localhost:8080/cart/${id}`, form, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      const resp = await axios.patch(`/cart/${id}`, form);
     },
     setCurrentCart: (carts) => {
       set({ currentCart: carts });
     },
   }))
-);
+;
 
 export default useCartStore;

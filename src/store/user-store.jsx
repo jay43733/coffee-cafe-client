@@ -1,4 +1,4 @@
-import axios from "axios";
+import axios from "../config/axios";
 import { toast } from "react-toastify";
 import { create } from "zustand";
 import { createJSONStorage, persist } from "zustand/middleware";
@@ -8,9 +8,12 @@ const useUserStore = create(
     (set) => ({
       user: null,
       token: null,
+      allUser: [],
+      currentUser: null,
       actionRegister: async (form) => {
         try {
-          const resp = await axios.post("http://localhost:8080/register", form);
+          const resp = await axios.post("/register", form);
+          
           console.log(resp, "Register");
           // toast.success(resp.data.message);
         } catch (error) {
@@ -20,18 +23,17 @@ const useUserStore = create(
       },
       actionLogin: async (form) => {
         try {
-          const resp = await axios.post("http://localhost:8080/login", form);
-          console.log(resp.data.user, "Login");
-
-          toast.success(`Welcome ${resp.data.user.user.firstName}`);
+          const resp = await axios.post("/login", form);
+        
+          toast.success(`Welcome ${resp.data.user.firstName}`);
           set({
-            user: resp.data.user,
-            token: resp.data.accessToken,
+            user: resp?.data.user,
+            token: resp?.data.accessToken,
           });
           return "success";
         } catch (error) {
-          console.log(error.response.data);
-          toast.error(error.response.data.error);
+          console.log(error?.response?.data);
+          toast.error(error?.response?.data.error);
         }
       },
 
@@ -39,19 +41,50 @@ const useUserStore = create(
         localStorage.clear();
         set({ user: null, token: null });
       },
-      actionEditProfile: async (form, token) => {
+      actionEditProfile: async (form) => {
         try {
-          const resp = await axios.patch("http://localhost:8080/edit", form, {
-            headers: { Authorization: `Bearer ${token}` },
-          });
-          // console.log(resp.data.newProfile, "resp")
+          const resp = await axios.patch("/edit", form);
+  
           set((state) => ({
-            user: { ...resp.data?.newProfile },
+            user: { ...resp?.data?.newProfile },
           }));
         } catch (error) {
           console.log(error);
         }
       },
+      actionGetAllUSer: async () => {
+        try {
+          const resp = await axios.get("/getAllUser");
+          set({ allUser: resp.data.allUser });
+        } catch (error) {
+          console.log(error);
+        }
+      },
+      actionChangeRole: async (id,body )=>{
+        try{
+          const resp = await axios.patch(`/role/${id}`,body)
+        }catch(error){
+          console.log(error)
+        }
+      },
+      actionDeleteUser : async (id) =>{
+        try{
+          const resp = await axios.patch(`/delete/${id}`)
+        }catch(error){
+          console.log(error)
+        }
+      },
+      actionActivateUser : async (id) =>{
+        try{
+          const resp = await axios.patch(`/activateUser/${id}`)
+        }catch(error){
+          console.log(error)
+        }
+      },
+      
+      setCurrentUser : (user) =>{
+        set({currentUser : user})
+      }
     }),
     {
       name: "coffee-cafe-store",

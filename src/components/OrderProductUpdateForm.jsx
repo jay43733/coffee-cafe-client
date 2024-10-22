@@ -10,8 +10,6 @@ import { toast } from "react-toastify";
 
 export const OrderProductUpdateForm = () => {
   //Import From Zustand
-  // console.log(currentCart);
-  const token = useUserStore((state) => state.token);
   const actionGetCart = useCartStore((state) => state.actionGetCart);
   const actionUpdateCart = useCartStore((state) => state.actionUpdateCart);
   const currentCart = useCartStore((state) => state.currentCart);
@@ -63,8 +61,8 @@ export const OrderProductUpdateForm = () => {
   const hdlSendToCart = async (e, id) => {
     try {
       e.preventDefault();
-      await actionUpdateCart(orderUpdateForm, token, id);
-      await actionGetCart(token);
+      await actionUpdateCart(orderUpdateForm, id);
+      await actionGetCart();
       e.target.closest("dialog").close();
     } catch (error) {
       const errorMessage = error.response?.data?.error || error.message;
@@ -88,7 +86,7 @@ export const OrderProductUpdateForm = () => {
           fontWeight="bold"
         />
         <Heading
-          text={`${currentCart?.products.price*currentCart?.amount} baht`}
+          text={`${currentCart?.products?.price*currentCart?.amount} baht`}
           color="secondary"
           fontSize="16"
           fontWeight="normal"

@@ -6,15 +6,18 @@ import NavBar from "../components/NavBar";
 import RightSideBar from "../components/RightSideBar";
 import Carousal from "../components/Carousal";
 import useProductStore from "../store/product-store";
+import Toggle from "../components/Toggle/Toggle";
 
 export default function HomePage() {
-  const actionGetAllProduct = useProductStore(
-    (state) => state.actionGetAllProduct
+  const actionGetProduct = useProductStore(
+    (state) => state.actionGetProduct
   );
   const products = useProductStore((state) => state.products);
 
+  let recommendedProducts = products.filter((item)=>item.isRecommended === true)
+
   useEffect(() => {
-    actionGetAllProduct();
+    actionGetProduct();
   }, []);
 
   return (
@@ -24,8 +27,8 @@ export default function HomePage() {
         <LeftSideBar />
       </div>
       {/* Center */}
-      <div className="flex flex-col min-w-[1084px] gap-5 flex-[0.6]">
-        {products.map((item, index) => (
+      <div className="flex flex-col min-w-[1084px] gap-6">
+        {recommendedProducts.map((item, index) => (
           <Carousal key={index} item={item} />
         ))}
       </div>
