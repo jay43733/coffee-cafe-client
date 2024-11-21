@@ -9,7 +9,6 @@ import PrimaryButton from "./Button/PrimaryButton";
 import useProductStore from "../store/product-store";
 import Toggle from "./Toggle/Toggle";
 
-
 const EditProductForm = ({ hdlCloseEditModal }) => {
   const currentProduct = useProductStore((state) => state.currentProduct);
   const actionUpdateProduct = useProductStore(
@@ -30,36 +29,6 @@ const EditProductForm = ({ hdlCloseEditModal }) => {
 
   const hdlChangeForm = (e) => {
     const { name, type, checked, value } = e.target;
-    if (name === "name") {
-      const nameRegex = /^(?![0-9])[A-Za-z0-9ก-ฮา]+/;
-
-      if (value.length > 18) {
-        setFormError({
-          ...formError,
-          name: "Name cannot exceed 18 characters.",
-        });
-      } else if (value !== "" && !nameRegex.test(value)) {
-        setFormError({
-          ...formError,
-          name: "Name cannot start with a number and must contain valid characters.",
-        });
-      } else {
-        const { name, ...rest } = formError;
-        setFormError(rest);
-      }
-    }
-
-    if (name === "price") {
-      const regex = /^(?!0)\d+$/;
-
-      if (value !== "" && !regex.test(value)) {
-        setFormError({
-          ...formError,
-          price: "Price cannot start with zero.",
-        });
-      }
-    }
-
     setForm({ ...form, [name]: type === "checkbox" ? checked : value });
   };
 
@@ -76,6 +45,8 @@ const EditProductForm = ({ hdlCloseEditModal }) => {
       setImage(file);
     }
   };
+
+  console.log(formError, "FormmmErorr")
 
   const hdlSubmit = async (e, id) => {
     e.preventDefault();
@@ -104,8 +75,6 @@ const EditProductForm = ({ hdlCloseEditModal }) => {
     }
   };
 
-  console.log(form, "Formmmmmmmmmmm");
-
   return (
     <div className="relative">
       {loading && (
@@ -118,7 +87,11 @@ const EditProductForm = ({ hdlCloseEditModal }) => {
         <div className="flex flex-col relative items-center self-center rounded-2xl gap-2 h-full border w-2/5 shadow-sm ">
           {previewImage ? (
             <div className="p-4 w-1/2 bg-cover bg-center px-6">
-              <img src={previewImage} alt="product-image" className="max-h-[80px]" />
+              <img
+                src={previewImage}
+                alt="product-image"
+                className="max-h-[80px]"
+              />
             </div>
           ) : (
             <img src={chocolateDrink} alt="product-image" width="48px" />

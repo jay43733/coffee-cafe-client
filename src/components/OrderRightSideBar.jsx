@@ -38,7 +38,7 @@ const OrderRightSideBar = ({ currentOrder, setCurrentOrder }) => {
           ✕
         </button>
 
-        <div className="my-2 min-h-[400px] max-h-[540px]">
+        <div className="my-2 min-h-[400px] max-h-[540px] ">
           <div className="flex flex-col gap-6">
             <Heading
               text={`Order ${String(currentOrder.id).padStart(3, "0")}`}
@@ -54,7 +54,7 @@ const OrderRightSideBar = ({ currentOrder, setCurrentOrder }) => {
             />
           </div>
           {currentOrder && (
-            <div className="min-h-[400px] max-h-[400px] overflow-auto">
+            <div className="min-h-[400px] max-h-[400px] overflow-auto scrollbar-hide">
               {currentOrder.order_items.map((item, index) => (
                 <ListMenuHistory key={index} item={item} />
               ))}

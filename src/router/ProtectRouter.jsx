@@ -5,7 +5,6 @@ import { Navigate } from "react-router-dom";
 
 const ProtectRouter = ({ element, allow }) => {
   const [isAllowed, setIsAllowed] = useState(null);
-  // const token = useUserStore((state) => state.token);
   const user = useUserStore((state) => state.user);
   useEffect(() => {
     checkRole();

@@ -5,13 +5,11 @@ export default function NavBar({ setSelectedCategory }) {
   const [isClicked, setIsClicked] = useState("All");
 
   const hdlSelectedCategory = (category) => {
-    // console.log(category)
     setSelectedCategory(category);
   };
 
   const hdlClick = (text) => {
     setIsClicked(text);
-    // console.log(e.target.value);
   };
 
   return (

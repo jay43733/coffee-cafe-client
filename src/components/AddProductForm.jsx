@@ -16,7 +16,7 @@ const AddProductForm = () => {
   const actionGetAllProduct = useProductStore(
     (state) => state.actionGetAllProduct
   );
-
+  
   const [form, setForm] = useState({
     name: "",
     price: "",
@@ -25,6 +25,7 @@ const AddProductForm = () => {
     product_categoryId: "",
   });
 
+  
   const hdlChangeForm = (e) => {
     const { name, type, checked, value } = e.target;
 
@@ -38,8 +39,9 @@ const AddProductForm = () => {
         });
       }
     }
+    
 
-    setForm({ ...form, [name]: type === "checkbox" ? checked : value });
+    setForm(prev => ({ ...prev, [name]: type === "checkbox" ? checked : value }));
   };
 
   const [formError, setFormError] = useState({});
@@ -101,7 +103,7 @@ const AddProductForm = () => {
     }
   };
 
-  console.log(form, "Formmmmmmmmmmm")
+  // console.log(form, "Formmmmmmmmmmm")
   return (
     <div className="relative">
       {loading && (
@@ -240,7 +242,7 @@ const AddProductForm = () => {
               </span>
             )}
           </div>
-          <PrimaryButton text="Confirm" />
+          <PrimaryButton text="Confirm"  />
           <SecondaryButton
             text="Back"
             type="button"

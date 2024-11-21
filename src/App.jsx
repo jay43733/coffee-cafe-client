@@ -5,7 +5,7 @@ import AppRouter from './router/AppRouter';
 
 const App = () => {
   return (
-    <div className='font-sans bg-[#ECF1F6] min-h-screen flex items-center justify-center p-10 pt-4'>
+    <div className='font-sans bg-[#ECF1F6] min-h-screen flex items-center justify-center pt-4'>
       <ToastContainer/>
       <AppRouter />
     </div>

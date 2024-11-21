@@ -84,43 +84,32 @@ const editProfileSchema = Joi.object({
     .allow(""),
 });
 
+// addProductSchema สำหรับการเพิ่มสินค้า
 const addProductSchema = Joi.object({
-  name: Joi.string().min(3).max(50).required().messages({
-    "string.empty": "Please type product name",
-  }),
-  price: Joi.number().positive().precision(2).required().messages({
-    "number.base": "Price must be a valid number",
-    "number.positive": "Price must be a positive number",
-    "any.required": "Price is required",
-  }),
-  description: Joi.string().min(10).max(500).required().messages({
-    "string.empty": "Description is required",
-    "string.min": "Description should have at least 10 characters",
-    "string.max": "Description should have a maximum of 500 characters",
-  }),
-  product_categoryId: Joi.string().required().messages({
-    "string.empty": "Product Category is required",
-    "any.required": "Product category is required",
-  }),
-  isRecommended: Joi.boolean().allow(false),
-});
+  name: Joi.string()
+    .min(3)
+    .max(50)
+    .pattern(/^(?![0-9])[A-Za-z0-9ก-ฮา]+/)
+    .required()
+    .messages({
+      "string.empty": "Please type product name",
+      "string.pattern.base":
+        "Name cannot start with a number and must contain valid characters.",
+    }),
 
-const editProductSchema = Joi.object({
-  name: Joi.string().min(3).max(50).required().messages({
-    "string.empty": "Please type product name",
-  }),
   price: Joi.number()
     .custom((value, helpers) => {
       const valueString = value.toString();
-      // Check for spaces in the price input
+
       if (/\s/.test(valueString)) {
         return helpers.error("number.whitespace");
       }
-      // Check for leading zeros in a non-decimal number
+
       if (/^0\d/.test(valueString)) {
         return helpers.error("number.leadingZero");
       }
-      return value; // Valid number
+
+      return value; // ถ้าค่าถูกต้อง
     })
     .positive()
     .precision(2)
@@ -132,15 +121,69 @@ const editProductSchema = Joi.object({
       "number.leadingZero": "Price cannot have leading zeros",
       "any.required": "Price is required",
     }),
+
   description: Joi.string().min(10).max(500).required().messages({
     "string.empty": "Description is required",
     "string.min": "Description should have at least 10 characters",
     "string.max": "Description should have a maximum of 500 characters",
   }),
-  product_categoryId: Joi.number().required().messages({
+
+  product_categoryId: Joi.string().required().messages({
     "string.empty": "Product Category is required",
     "any.required": "Product category is required",
   }),
+
+  isRecommended: Joi.boolean().allow(false),
+});
+
+const editProductSchema = Joi.object({
+  name: Joi.string()
+    .min(3)
+    .max(50)
+    .pattern(/^(?![0-9])[A-Za-z0-9ก-ฮา]+/)
+    .required()
+    .messages({
+      "string.empty": "Please type product name",
+      "string.pattern.base":
+        "Name cannot start with a number and must contain valid characters.",
+    }),
+
+  price: Joi.number()
+    .custom((value, helpers) => {
+      const valueString = value.toString();
+
+      if (/\s/.test(valueString)) {
+        return helpers.error("number.whitespace");
+      }
+
+      if (/^0\d/.test(valueString)) {
+        return helpers.error("number.leadingZero");
+      }
+
+      return value; // ถ้าค่าถูกต้อง
+    })
+    .positive()
+    .precision(2)
+    .required()
+    .messages({
+      "number.base": "Price must be a valid number",
+      "number.positive": "Price must be a positive number",
+      "number.whitespace": "Price cannot contain spaces",
+      "number.leadingZero": "Price cannot have leading zeros",
+      "any.required": "Price is required",
+    }),
+
+  description: Joi.string().min(10).max(500).required().messages({
+    "string.empty": "Description is required",
+    "string.min": "Description should have at least 10 characters",
+    "string.max": "Description should have a maximum of 500 characters",
+  }),
+
+  product_categoryId: Joi.number().required().messages({
+    "number.base": "Product Category must be a valid number",
+    "any.required": "Product category is required",
+  }),
+
   isRecommended: Joi.boolean().allow(false),
 });
 

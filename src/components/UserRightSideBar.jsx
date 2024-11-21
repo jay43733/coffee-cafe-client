@@ -15,7 +15,6 @@ export default function UserRightSideBar() {
   const actionDeleteAllCart = useCartStore(
     (state) => state.actionDeleteAllCart
   );
-  const actionAddOrder = useOrderStore((state) => state.actionAddOrder);
 
   const totalPrice = carts.reduce(
     (prev, curr) => prev + curr?.amount * curr?.products?.price,
@@ -59,7 +58,7 @@ export default function UserRightSideBar() {
               color="primary"
             />
           </div>
-          <div className="min-h-[400px] max-h-[400px] overflow-auto">
+          <div className="min-h-[400px] max-h-[400px] overflow-auto scrollbar-hide">
             {carts.map((item, index) => (
               <ListMenu key={index} item={item} />
             ))}

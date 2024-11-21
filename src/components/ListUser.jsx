@@ -76,7 +76,7 @@ const ListUser = ({
         </td>
 
         <td className="px-8 py-10 w-[5%]">
-          {(item.role === "USER") ? (
+          {item.role === "USER" ? (
             <>
               {item.user_status === "INACTIVE" ? (
                 <SecondaryButton
@@ -96,14 +96,26 @@ const ListUser = ({
             </>
           ) : (
             <div className="flex items-end gap-2 justify-center">
-              <Heading
-                text={`${item.role.slice(0, 1)}${item.role
-                  .slice(1)
-                  .toLowerCase()}`}
-                color="primary"
-                fontSize="18"
-                fontWeight="bold"
-              />
+              {item.role === "ADMIN" ? (
+                <Heading
+                  text={`${item.role.slice(0, 1)}${item.role
+                    .slice(1)
+                    .toLowerCase()}`}
+                  color="primary"
+                  fontSize="18"
+                  fontWeight="bold"
+                />
+              ) : (
+                <Heading
+                  text={`${item.role.slice(0, 1)}${item.role
+                    .slice(1)
+                    .toLowerCase()}`}
+                  color="primary"
+                  fontSize="18"
+                  fontWeight="bold"
+                />
+              )}
+
               <img src={coffeecafe_logo} alt="logo" width="18px" />
             </div>
           )}

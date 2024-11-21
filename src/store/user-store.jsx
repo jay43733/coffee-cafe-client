@@ -89,6 +89,7 @@ const useUserStore = create(
     {
       name: "coffee-cafe-store",
       storage: createJSONStorage(() => localStorage),
+      partialize : (state)=>({user:state.user,token:state.token})
     }
   )
 );

@@ -1,16 +1,23 @@
 /** @type {import('tailwindcss').Config} */
 export default {
-  content: [
-    "./index.html",
-    "./src/**/*.{js,ts,jsx,tsx}",
-  ],
+  content: ["./index.html", "./src/**/*.{js,ts,jsx,tsx}"],
   theme: {
-    extend: {},
+    extend: {
+      utilities: {
+        ".scrollbar-hide": {
+          /* Hide scrollbar for Chrome, Safari, and Opera */
+          "::-webkit-scrollbar": {
+            display: "none",
+          },
+          /* Hide scrollbar for IE, Edge, and Firefox */
+          "-ms-overflow-style": "none" /* IE and Edge */,
+          "scrollbar-width": "none" /* Firefox */,
+        },
+      },
+    },
   },
-  plugins: [
-    require('daisyui'),
-  ],
+  plugins: [require("daisyui")],
   daisyui: {
     themes: ["light"],
   },
-}
+};

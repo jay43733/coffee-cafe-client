@@ -11,16 +11,15 @@ import { toast } from "react-toastify";
 export const OrderProductForm = () => {
   //Import From Zustand
   const actionAddCart = useCartStore((state) => state.actionAddCart);
-  const actionGetCart = useCartStore((state)=>state.actionGetCart)
-  const currentItem = useCartStore((state)=>state.currentItem)
-  const setCurrentItem = useCartStore((state)=>state.setCurrentItem)
-
+  const actionGetCart = useCartStore((state) => state.actionGetCart);
+  const currentItem = useCartStore((state) => state.currentItem);
+  const setCurrentItem = useCartStore((state) => state.setCurrentItem);
 
   const [orderForm, setOrderForm] = useState({
     productId: currentItem.id,
     price: currentItem.price,
     sweetness: "S100",
-    roast: "",
+    roast: currentItem.product_categoryId === 1 ? "MEDIUM" : null ,
     comment: "",
     amount: 1,
   });
@@ -35,16 +34,14 @@ export const OrderProductForm = () => {
 
   const hdlCloseModal = () => {
     document.getElementById("order-product").close();
-    setCurrentItem(null)
+    setCurrentItem(null);
   };
 
   const hdlOrderOption = (e) => {
-    // console.log(e.target.value)
     setOrderForm((prv) => ({ ...prv, [e.target.name]: e.target.value }));
   };
 
   const hdlOrderComment = (e) => {
-    // console.log(e.target.value);
     setOrderForm((prv) => ({ ...prv, [e.target.name]: e.target.value }));
   };
 
@@ -53,7 +50,7 @@ export const OrderProductForm = () => {
   };
 
   const hdlDecreaseAmount = () => {
-    if (orderForm.amount <= 1) {
+    if (orderForm.amount === 1) {
       return;
     }
     setOrderForm((prv) => ({ ...prv, amount: prv.amount - 1 }));
@@ -63,14 +60,16 @@ export const OrderProductForm = () => {
     try {
       e.preventDefault();
       await actionAddCart(orderForm);
-      await actionGetCart()
+      await actionGetCart();
       e.target.closest("dialog").close();
     } catch (error) {
       const errorMessage = error.response?.data?.error || error.message;
       toast.error(errorMessage);
-      console.log(errorMessage);
+      // console.log(errorMessage);
     }
   };
+
+
   return (
     <form onSubmit={hdlSendToCart}>
       <div className="p-8 flex flex-col items-center gap-1 ">

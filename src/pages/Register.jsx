@@ -49,7 +49,7 @@ const Register = () => {
     //2 Post with Axios to Front-end
     actionRegister(form);
     setForm(initialForm);
-    toast.success("Register Successfully")
+    toast.success("Register Successfully");
     setFormError(initialForm);
     navigate("/login");
   };
@@ -133,6 +133,7 @@ const Register = () => {
         </div>
         <div>
           <Input
+            type="password"
             label="Password"
             placeholder="Password"
             name="password"
@@ -147,6 +148,7 @@ const Register = () => {
         </div>
         <div>
           <Input
+            type="password"
             label="Confirm Password"
             placeholder="Type Password Again"
             name="confirmPassword"

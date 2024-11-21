@@ -46,7 +46,7 @@ const QrCode = ({
       await actionGetCart();
       await e.target.closest("dialog").close();
 
-      if (user.role === "ADMIN") {
+      if (user.role === "USER") {
         return navigate("/user/order/status");
       } else {
         return navigate("/user/admin/status");
