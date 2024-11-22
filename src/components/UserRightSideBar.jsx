@@ -7,7 +7,7 @@ import useCartStore from "../store/cart-store";
 import useUserStore from "../store/user-store";
 import useOrderStore from "../store/order-store";
 import QrCode from "./QrCode";
-
+import { ScrollArea, ScrollBar } from "./ui/scroll-area";
 export default function UserRightSideBar() {
   const carts = useCartStore((state) => state.carts);
   const user = useUserStore((state) => state.user);
@@ -58,11 +58,14 @@ export default function UserRightSideBar() {
               color="primary"
             />
           </div>
-          <div className="min-h-[400px] max-h-[400px] overflow-auto scrollbar-hide">
-            {carts.map((item, index) => (
-              <ListMenu key={index} item={item} />
-            ))}
-          </div>
+          <ScrollArea className="h-[440px] w-full">
+            <div className="min-h-[400px] max-h-[400px]">
+              {carts.map((item, index) => (
+                <ListMenu key={index} item={item} />
+              ))}
+            </div>
+            <ScrollBar orientation="vertical" />
+          </ScrollArea>
         </div>
         <div className="flex flex-col gap-7">
           <div className="flex flex-col gap-2">
@@ -98,8 +101,8 @@ export default function UserRightSideBar() {
         className="modal"
         onClose={() => {
           setUploadImage(null);
-          setIsPaid("")
-          setIsClicked("")
+          setIsPaid("");
+          setIsClicked("");
         }}
       >
         <div className="modal-box">

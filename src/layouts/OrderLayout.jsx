@@ -11,7 +11,7 @@ import useUserStore from "../store/user-store";
 
 const OrderLayout = () => {
   return (
-    <div className="w-full max-w-[1844px] mx-auto min-h-screen">
+    <div className="w-full max-w-[1844px] mx-auto min-h-screen ">
       <div className="flex w-full items-center sticky top-4 justify-between">
         <Logo />
         <UserBanner />
@@ -24,7 +24,7 @@ const OrderLayout = () => {
         </div>
 
         {/* Content Area */}
-        <div className="flex-[0.8] pl-[280px] h-full">
+        <div className="flex-[0.8] pl-[280px] min-h-screen">
           <Outlet />
         </div>
       </div>
