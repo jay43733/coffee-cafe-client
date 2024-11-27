@@ -2,6 +2,7 @@ import React, { Children, useEffect, useState } from "react";
 import useUserStore from "../store/user-store";
 import axios from "../config/axios";
 import { Navigate } from "react-router-dom";
+import LoadingPage from "@/pages/Loading";
 
 const ProtectRouter = ({ element, allow }) => {
   const [isAllowed, setIsAllowed] = useState(null);
@@ -29,7 +30,7 @@ const ProtectRouter = ({ element, allow }) => {
 
   //Step 1
   if (isAllowed === null) {
-    return <div>Loading ...</div>;
+    return <LoadingPage />;
   }
 
   if (!isAllowed) {

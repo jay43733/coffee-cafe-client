@@ -8,21 +8,22 @@ import { OrderProductForm } from "./OrderProductForm";
 import { useNavigate } from "react-router-dom";
 import SecondaryButton from "./Button/SecondaryButton";
 
-const Carousal = ({ item, index }) => {
-  const token = useUserStore((state) => state.token);
-
+const Carousal = ({ item }) => {
+  const localState = localStorage.getItem("coffee-cafe-store");
+  const actualToken = JSON.parse(localState);
+  const token = actualToken.state.token;
   const navigate = useNavigate();
 
   const hdlClickProduct = (token) => {
-    if(!token){
-      return document.getElementById("need-login").showModal()
+    if (!token) {
+      return document.getElementById("need-login").showModal();
     }
     navigate("/user/order");
   };
 
-  const hdlGotoLogin= async(id) =>{
+  const hdlGotoLogin = async (id) => {
     navigate("/login");
-  }
+  };
 
   return (
     <div>
@@ -53,7 +54,7 @@ const Carousal = ({ item, index }) => {
           <PrimaryButton
             text="Order Now"
             type="button"
-            onClick={() => hdlClickProduct( token)}
+            onClick={() => hdlClickProduct(token)}
           />
         </div>
       </div>

@@ -8,7 +8,7 @@ import TertiaryButton from "./Button/TertiaryButton";
 import { FileImage } from "lucide-react";
 import SecondaryButton from "./Button/SecondaryButton";
 
-const OrderRightSideBar = ({ currentOrder, setCurrentOrder }) => {
+const OrderRightSideBar = ({ currentOrder, setCurrentOrder, isLoading }) => {
   const user = useUserStore((state) => state.user);
   const actionConfirmOrder = useOrderStore((state) => state.actionConfirmOrder);
   const actionCancelOrder = useOrderStore((state) => state.actionCancelOrder);
@@ -29,7 +29,10 @@ const OrderRightSideBar = ({ currentOrder, setCurrentOrder }) => {
     document.getElementById("image-modal").showModal();
   };
   return (
-    <div className="h-full fixed max-h-[828px]">
+    <div className={`h-full fixed max-h-[828px] ${isLoading && "opacity-40 relative"}`}>
+      {isLoading && (
+            <span className="bg-[#7A5C61] loading loading-dots loading-lg absolute top-1/2 left-1/2 -translate-x-4 z-40 opacity-100"></span>
+          )}
       <div className="sticky top-4 z-10 px-8 py-10 flex flex-col bg-white rounded-2xl w-full h-full max-w-[400px] min-w-[364px] justify-between shadow-md">
         <button
           onClick={() => setCurrentOrder(null)}
@@ -41,7 +44,7 @@ const OrderRightSideBar = ({ currentOrder, setCurrentOrder }) => {
         <div className="my-2 min-h-[400px] max-h-[540px] ">
           <div className="flex flex-col gap-6">
             <Heading
-              text={`Order ${String(currentOrder.id).padStart(3, "0")}`}
+              text={`Order ${String(currentOrder?.id).padStart(3, "0")}`}
               fontSize="32"
               fontWeight="bold"
               color="Primary"
@@ -55,14 +58,14 @@ const OrderRightSideBar = ({ currentOrder, setCurrentOrder }) => {
           </div>
           {currentOrder && (
             <div className="min-h-[400px] max-h-[400px] overflow-auto scrollbar-hide">
-              {currentOrder.order_items.map((item, index) => (
+              {currentOrder?.order_items.map((item, index) => (
                 <ListMenuHistory key={index} item={item} />
               ))}
             </div>
           )}
         </div>
         <div className="flex flex-col gap-7">
-          {(user.role === "ADMIN" || user.role === "SUPERADMIN") && currentOrder.paymentUrl !== "" && (
+          {(user.role === "ADMIN" || user.role === "SUPERADMIN") && currentOrder?.paymentUrl !== "" && (
             <div>
               <SecondaryButton
                 text="Attached Image"
@@ -87,7 +90,7 @@ const OrderRightSideBar = ({ currentOrder, setCurrentOrder }) => {
                     ✕
                   </button>
                   <img
-                    src={currentOrder.paymentUrl}
+                    src={currentOrder?.paymentUrl}
                     alt="Image"
                     className="rounded-lg w-full max-w-[1000px]"
                   />
@@ -105,7 +108,7 @@ const OrderRightSideBar = ({ currentOrder, setCurrentOrder }) => {
             />
             <div className="flex justify-end">
               <Heading
-                text={`${currentOrder.total_price.toLocaleString(
+                text={`${currentOrder?.total_price.toLocaleString(
                   "en-US"
                 )} baht`}
                 // text={`${currentOrder?.total_price.toLocalString("en-US")} baht`}
@@ -115,7 +118,7 @@ const OrderRightSideBar = ({ currentOrder, setCurrentOrder }) => {
               />
             </div>
           </div>
-          {(user.role === "ADMIN" || user.role === "SUPERADMIN") && currentOrder.status === "PENDING" && (
+          {(user.role === "ADMIN" || user.role === "SUPERADMIN") && currentOrder?.status === "PENDING" && (
             <div className="flex flex-col gap-2">
               <PrimaryButton
                 text="Complete"

@@ -1,11 +1,13 @@
 import React, { useState } from "react";
 import SecondaryButton from "./Button/SecondaryButton";
 
-export default function StatusNavBar({ setSelectedStatus }) {
+export default function StatusNavBar({ setSelectedStatus, setCurrentPage, setIsClickedPage }) {
   const [isClicked, setIsClicked] = useState("All");
 
   const hdlSelectedStatus = (status) => {
     setSelectedStatus(status);
+    setCurrentPage(1)
+    setIsClickedPage(1)
   };
 
   const hdlClick = (text) => {

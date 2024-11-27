@@ -6,6 +6,8 @@ import useProductStore from "../store/product-store";
 import { OrderProductForm } from "../components/OrderProductForm";
 import useCartStore from "../store/cart-store";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
+import { useLocation } from "react-router-dom";
+import Pagination from "@/components/Pagination";
 
 const OrderProduct = () => {
   const products = useProductStore((state) => state.products);
@@ -15,43 +17,85 @@ const OrderProduct = () => {
 
   //UseState
   const [selectedCategory, setSelectedCategory] = useState("");
+  const [allProducts, setAllProducts] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [productPerPage, setProductPerPage] = useState(10);
 
   useEffect(() => {
-    actionGetProduct();
+    setLoading(true);
+    actionGetProduct().finally(() => setLoading(false));
   }, []);
+
+  useEffect(() => {
+    if (products && products.length > 0) {
+      setAllProducts(products);
+    }
+  }, [products]);
 
   let filteredProducts;
   if (typeof selectedCategory === "number") {
-    filteredProducts = products.filter(
+    filteredProducts = allProducts.filter(
       (item) => item.product_categoryId === selectedCategory
     );
   } else if (selectedCategory === true) {
-    filteredProducts = products.filter((item) => !!item.isRecommended);
+    filteredProducts = allProducts.filter((item) => !!item.isRecommended);
   } else {
-    filteredProducts = products;
+    filteredProducts = allProducts;
   }
+
+  const indexOfLastPost = currentPage * productPerPage;
+
+  const indexOfFirstPost = indexOfLastPost - productPerPage;
+  const currentProducts = filteredProducts.slice(
+    indexOfFirstPost,
+    indexOfLastPost
+  );
 
   const hdlClickProduct = (item) => {
     setCurrentItem(item);
     document.getElementById("order-product").showModal();
   };
 
+  const [isClickedPage, setIsClickedPage] = useState(1);
+
   return (
     <>
-      <div className="flex w-full gap-12 min-h-[800px]  ">
-        <div className="flex-[0.7] min-w-[1148px] pl-12 sticky top-32 ">
-          <div className="fixed w-[1100px]">
-            <NavBar setSelectedCategory={setSelectedCategory} />
+      <div className="flex w-full gap-12">
+        <div
+          className={`flex-[0.7] min-w-[1148px] pl-12 ${
+            loading && "relative opacity-30"
+          }`}
+        >
+          {loading && (
+            <span className="bg-[#7A5C61] loading loading-dots loading-lg absolute top-1/2 left-1/2 -translate-x-4"></span>
+          )}
+          <div className="sticky top-28 w-[1100px] bg-[#eef1f4] py-4">
+            <NavBar setSelectedCategory={setSelectedCategory} setCurrentPage={setCurrentPage} setIsClickedPage={setIsClickedPage} />
           </div>
-          <ScrollArea className="h-[1000px] mt-14">
+          <div className="flex flex-col min-h-[640px] h-full justify-between items-center">
             <div className="flex flex-wrap pt-4 px-6 justify-start gap-4 items-start w-full ">
-              {filteredProducts.map((item, index) => (
-                <div key={item.id} onClick={() => hdlClickProduct(item)}>
+              {currentProducts.map((item) => (
+                <div
+                  key={item.id}
+                  onClick={() => hdlClickProduct(item)}
+                  className="cursor-pointer"
+                >
                   <ProductCard key={item.id} item={item} />
                 </div>
               ))}
             </div>
-          </ScrollArea>
+            {filteredProducts.length > 10 && (
+              <Pagination
+                productPerPage={productPerPage}
+                totalProduct={filteredProducts.length}
+                setCurrentPage={setCurrentPage}
+                currentPage={currentPage}
+                isClickedPage={isClickedPage}
+                setIsClickedPage={setIsClickedPage}
+              />
+            )}
+          </div>
         </div>
         <div className="flex-[0.3] ">
           <UserRightSideBar />

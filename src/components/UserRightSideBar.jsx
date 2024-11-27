@@ -16,6 +16,8 @@ export default function UserRightSideBar() {
     (state) => state.actionDeleteAllCart
   );
 
+  // const [loading, setLoading] = useState(false);
+
   const totalPrice = carts.reduce(
     (prev, curr) => prev + curr?.amount * curr?.products?.price,
     0
@@ -42,6 +44,9 @@ export default function UserRightSideBar() {
 
   return (
     <div className="h-full fixed max-h-[828px]">
+      {/* {loading && (
+        <span className="bg-[#7A5C61] loading loading-dots loading-lg absolute top-1/2 left-1/2 -translate-x-4"></span>
+      )} */}
       <div className="sticky top-4 z-10 px-8 py-10 flex flex-col bg-white rounded-2xl w-full max-w-[400px] min-w-[364px] h-full justify-between shadow-md">
         <div className="my-2 min-h-[400px] max-h-[540px]">
           <div className="flex flex-col gap-6">

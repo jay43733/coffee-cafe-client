@@ -14,12 +14,13 @@ export const OrderProductForm = () => {
   const actionGetCart = useCartStore((state) => state.actionGetCart);
   const currentItem = useCartStore((state) => state.currentItem);
   const setCurrentItem = useCartStore((state) => state.setCurrentItem);
+  const [loading, setLoading] = useState(false);
 
   const [orderForm, setOrderForm] = useState({
     productId: currentItem.id,
     price: currentItem.price,
     sweetness: "S100",
-    roast: currentItem.product_categoryId === 1 ? "MEDIUM" : null ,
+    roast: currentItem.product_categoryId === 1 ? "MEDIUM" : null,
     comment: "",
     amount: 1,
   });
@@ -59,9 +60,11 @@ export const OrderProductForm = () => {
   const hdlSendToCart = async (e) => {
     try {
       e.preventDefault();
+      setLoading(true);
       await actionAddCart(orderForm);
       await actionGetCart();
       e.target.closest("dialog").close();
+      setLoading(false);
     } catch (error) {
       const errorMessage = error.response?.data?.error || error.message;
       toast.error(errorMessage);
@@ -69,9 +72,11 @@ export const OrderProductForm = () => {
     }
   };
 
-
   return (
-    <form onSubmit={hdlSendToCart}>
+    <form onSubmit={hdlSendToCart} className={loading && "relative opacity-40"}>
+      {loading && (
+        <span className="bg-[#7A5C61] loading loading-dots loading-lg absolute top-1/2 left-1/2 -translate-x-4"></span>
+      )}
       <div className="p-8 flex flex-col items-center gap-1 ">
         <img src={currentItem.image} alt="product-image" width="100px" />
         <Heading

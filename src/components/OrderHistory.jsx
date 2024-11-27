@@ -13,7 +13,7 @@ const OrderHistory = ({ item, hdlGetOrderById, currentOrder }) => {
       }
        flex justify-between items-center`}
     >
-      <div className="flex flex-col gap-1 px-4 py-2 ">
+      <div className="flex flex-col gap-0.5 px-4 py-2 ">
         <div className="flex items-baseline gap-2">
           {/*Order Id */}
           {item.status === "PENDING" ? (

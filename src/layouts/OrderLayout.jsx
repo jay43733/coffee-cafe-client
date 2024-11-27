@@ -11,23 +11,23 @@ import useUserStore from "../store/user-store";
 
 const OrderLayout = () => {
   return (
-    <div className="w-full max-w-[1844px] mx-auto min-h-screen ">
-      <div className="flex w-full items-center sticky top-4 justify-between">
+    <div className="w-full max-w-[1844px] mx-auto ">
+      <div className="flex w-full items-center sticky top-0 z-10 justify-between bg-[#edf1f5]">
         <Logo />
         <UserBanner />
       </div>
 
-      <div className="flex min-h-screen">
+      <div className="flex">
         {/* Left Sidebar */}
         <div className="flex-[0.2] fixed">
           <UserLeftSideBar />
         </div>
 
         {/* Content Area */}
-        <div className="flex-[0.8] pl-[280px] min-h-screen">
+      </div>
+        <div className="pl-[280px] min-h-full">
           <Outlet />
         </div>
-      </div>
     </div>
   );
 };

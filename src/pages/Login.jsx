@@ -54,7 +54,7 @@ const Login = () => {
   }
 
   return (
-    <div className="flex flex-col p-20 w-full h-full relative min-w-[1000px] bg-white gap-6 rounded-[64px] shadow-lg">
+    <div className="flex flex-col px-16 py-10 w-[94%] h-full relative bg-white gap-6 rounded-[64px] shadow-lg">
       <div className="absolute top-10 left-10">
       <TertiaryButton text="HOMEPAGE" Icon={()=><ChevronLeft color="#716B6C" size={20} /> } func={hdlGoToHome}  />
       </div>
