@@ -29,7 +29,7 @@ const OrderRightSideBar = ({ currentOrder, setCurrentOrder, isLoading }) => {
     document.getElementById("image-modal").showModal();
   };
   return (
-    <div className={`h-full fixed max-h-[828px] ${isLoading && "opacity-40 relative"}`}>
+    <div className={`h-full fixed max-h-[808px] ${isLoading && "opacity-40 relative"}`}>
       {isLoading && (
             <span className="bg-[#7A5C61] loading loading-dots loading-lg absolute top-1/2 left-1/2 -translate-x-4 z-40 opacity-100"></span>
           )}

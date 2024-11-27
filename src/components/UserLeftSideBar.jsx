@@ -22,11 +22,10 @@ export default function UserLeftSideBar() {
     actionLogout();
   };
 
-
   return (
-    <div className="w-[280px] h-fit p-6 rounded-2xl bg-[#7A5C61] hover:shadow-2xl ">
-      <div className="flex gap-[360px] flex-col justify-between">
-        <div className="flex flex-col gap-1 min-h-[360px] max-h-[1000px]  ">
+    <div className="w-[280px] max-h-[808px] h-full p-6 rounded-2xl bg-[#7A5C61] hover:shadow-2xl ">
+      <div className="flex flex-col justify-between">
+        <div className="flex flex-col gap-1 min-h-[720px] ">
           <NavLink
             to="/user"
             end // Add this prop to ensure it only matches the exact path "/user"

@@ -43,7 +43,7 @@ export default function UserRightSideBar() {
   }, []);
 
   return (
-    <div className="h-full fixed max-h-[828px]">
+    <div className="h-full fixed max-h-[808px]">
       {/* {loading && (
         <span className="bg-[#7A5C61] loading loading-dots loading-lg absolute top-1/2 left-1/2 -translate-x-4"></span>
       )} */}

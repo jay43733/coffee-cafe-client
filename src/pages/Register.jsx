@@ -61,7 +61,7 @@ const Register = () => {
   }
 
   return (
-    <div className="flex p-10 w-[94%] h-full bg-white rounded-[64px] shadow-lg">
+    <div className="flex p-10 w-[94%] h-full bg-white rounded-[64px] shadow-lg m-auto">
       <div className="flex flex-col gap-6 justify-center items-center flex-1">
         <img src={chocolateDrink} alt="chocolate-drink" className="w-[100px]" />
         <Heading

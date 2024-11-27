@@ -50,15 +50,19 @@ const Login = () => {
   }
 
   function hdlGoToHome() {
-    navigate("/")
+    navigate("/");
   }
 
   return (
-    <div className="flex flex-col px-16 py-10 w-[94%] h-full relative bg-white gap-6 rounded-[64px] shadow-lg">
+    <div className="flex flex-col px-16 py-10 w-[94%] h-full relative bg-white gap-6 rounded-[64px] shadow-lg m-auto">
       <div className="absolute top-10 left-10">
-      <TertiaryButton text="HOMEPAGE" Icon={()=><ChevronLeft color="#716B6C" size={20} /> } func={hdlGoToHome}  />
+        <TertiaryButton
+          text="HOMEPAGE"
+          Icon={() => <ChevronLeft color="#716B6C" size={20} />}
+          func={hdlGoToHome}
+        />
       </div>
-      <div className="py-4 flex flex-col gap-6 items-center">
+      <div className="py-4 flex flex-col gap-6 items-center justify-center min-h-[88vh] ">
         <img src={chocolateDrink} alt="chocolate-drink" className="w-[100px]" />
         <Heading
           text="Coffee Cafe"

@@ -3,7 +3,7 @@ import React from "react";
 const LoadingRightSideBar = () => {
   return (
     <div
-      className="h-full max-h-[828px]
+      className="h-full max-h-[808px]
         opacity-40 relative"
     >
       <span className="bg-[#7A5C61] loading loading-dots loading-lg absolute top-1/2 left-1/2 -translate-x-4 z-40 opacity-100"></span>
