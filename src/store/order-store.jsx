@@ -5,7 +5,7 @@ import { create } from "zustand";
 
 const useOrderStore = create((set) => ({
   orders: [],
-  allOrders : [],
+  allOrders: [],
   currentOrder: null,
   actionAddOrder: async (form) => {
     try {
@@ -36,28 +36,26 @@ const useOrderStore = create((set) => ({
   },
   actionGetOrderItemById: async (orderId) => {
     try {
-      const resp = await axios.get(
-        `/order/getOrder/${orderId}`
-      );
+      const resp = await axios.get(`/order/getOrder/${orderId}`);
       return resp.data.orderItem;
     } catch (error) {
       console.log(error);
     }
   },
-  actionConfirmOrder : async(orderId) =>{
-    try{
-      const resp = await axios.patch(`/order/confirmOrder/${orderId}`)
-      toast.success("Order Completed !")
-    }catch(error){
-      toast.error(error.response.data.error)
+  actionConfirmOrder: async (orderId) => {
+    try {
+      const resp = await axios.patch(`/order/confirmOrder/${orderId}`);
+      toast.success("Order Completed !");
+    } catch (error) {
+      toast.error(error.response.data.error);
     }
   },
-  actionCancelOrder : async(orderId) =>{
-    try{
-      const resp = await axios.patch(`/order/cancelOrder/${orderId}`)
-      console.log(resp)
-    }catch(error){
-      toast.error(error.response.data.error)
+  actionCancelOrder: async (orderId) => {
+    try {
+      const resp = await axios.patch(`/order/cancelOrder/${orderId}`);
+      console.log(resp);
+    } catch (error) {
+      toast.error(error.response.data.error);
     }
   },
 }));

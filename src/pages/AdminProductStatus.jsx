@@ -59,8 +59,6 @@ export default function AdminProductStatus() {
   const indexOfLastPost = currentPage * statusPerPage;
   const indexOfFirstPost = indexOfLastPost - statusPerPage;
   const currentStatus = filteredStatus.slice(indexOfFirstPost, indexOfLastPost);
-  console.log(isLoading, "load");
-  console.log(currentOrder, "order");
 
   return (
     <div className="flex w-full gap-12">

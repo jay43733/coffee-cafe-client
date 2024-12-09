@@ -5,10 +5,40 @@ import PrimaryButton from "./Button/PrimaryButton";
 import SecondaryButton from "./Button/SecondaryButton";
 import useCartStore from "../store/cart-store";
 import useUserStore from "../store/user-store";
-import useOrderStore from "../store/order-store";
-import QrCode from "./QrCode";
 import { ScrollArea, ScrollBar } from "./ui/scroll-area";
+import { Elements } from "@stripe/react-stripe-js";
+import { loadStripe } from "@stripe/stripe-js";
+import CheckoutForm from "./CheckoutForm";
+import axios from "axios";
+import "../stripe.css";
+import QrCode from "./QrCode";
+
 export default function UserRightSideBar() {
+  // Add Stripe initialization
+  const stripePromise = loadStripe(
+    "pk_test_51QTyM3JKsFVoUyyZQkj1LzKb9WNdfnTvVoRpD6V8O895YBlUmniNDyWwLDk8pWb9qDIThKlbHjQEjA31d3tqhDji009XeWUCal"
+  );
+
+  // Add state for client secret
+  const [clientSecret, setClientSecret] = useState("");
+
+  // Add useEffect to get payment intent
+  useEffect(() => {
+    const getPaymentIntent = async () => {
+      const result = await axios.post(
+        "http://localhost:8080/create-payment-intent"
+      );
+
+      setClientSecret(result?.data?.clientSecret);
+    };
+    getPaymentIntent();
+  }, []);
+
+  // Add Stripe options
+  const options = {
+    clientSecret,
+    appearance: { theme: "stripe" },
+  };
   const carts = useCartStore((state) => state.carts);
   const user = useUserStore((state) => state.user);
   const actionGetCart = useCartStore((state) => state.actionGetCart);
@@ -32,7 +62,9 @@ export default function UserRightSideBar() {
 
   const hdlConfirmOrder = async () => {
     //Need to Pay bill before finish ordering
-    document.getElementById("pay-bill").showModal();
+    if (clientSecret) {
+      document.getElementById("pay-bill").showModal();
+    }
   };
 
   const [isPaid, setIsPaid] = useState("");
@@ -118,15 +150,30 @@ export default function UserRightSideBar() {
           >
             ✕
           </button>
-          <QrCode
-            totalPrice={totalPrice}
-            uploadImage={uploadImage}
-            setUploadImage={setUploadImage}
-            isPaid={isPaid}
-            setIsPaid={setIsPaid}
-            isClicked={isClicked}
-            setIsClicked={setIsClicked}
-          />
+          {user?.role === "USER" ? (
+            clientSecret && (
+              <Elements stripe={stripePromise} options={options}>
+                <CheckoutForm
+                  dpmCheckerLink={`https://dashboard.stripe.com/settings/payment_methods/review?transaction_id=${clientSecret}`}
+                  onSuccess={() => {
+                    document.getElementById("pay-bill").close();
+                    // Add your post-payment success logic here
+                  }}
+                  totalPrice={totalPrice}
+                />
+              </Elements>
+            )
+          ) : (
+            <QrCode
+              totalPrice={totalPrice}
+              uploadImage={uploadImage}
+              setUploadImage={setUploadImage}
+              isPaid={isPaid}
+              setIsPaid={setIsPaid}
+              isClicked={isClicked}
+              setIsClicked={setIsClicked}
+            />
+          )}
         </div>
       </dialog>
     </div>

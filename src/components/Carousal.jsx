@@ -10,8 +10,8 @@ import SecondaryButton from "./Button/SecondaryButton";
 
 const Carousal = ({ item }) => {
   const localState = localStorage.getItem("coffee-cafe-store");
-  const actualToken = JSON.parse(localState);
-  const token = actualToken.state.token;
+  const accessLocalStorage = localState ? JSON.parse(localState) : null;
+  const token = accessLocalStorage?.state?.token;
   const navigate = useNavigate();
 
   const hdlClickProduct = (token) => {

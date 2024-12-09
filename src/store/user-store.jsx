@@ -13,7 +13,7 @@ const useUserStore = create(
       actionRegister: async (form) => {
         try {
           const resp = await axios.post("/register", form);
-          
+
           console.log(resp, "Register");
           // toast.success(resp.data.message);
         } catch (error) {
@@ -24,7 +24,7 @@ const useUserStore = create(
       actionLogin: async (form) => {
         try {
           const resp = await axios.post("/login", form);
-        
+
           toast.success(`Welcome ${resp.data.user.firstName}`);
           set({
             user: resp?.data.user,
@@ -44,7 +44,7 @@ const useUserStore = create(
       actionEditProfile: async (form) => {
         try {
           const resp = await axios.patch("/edit", form);
-  
+
           set((state) => ({
             user: { ...resp?.data?.newProfile },
           }));
@@ -60,36 +60,36 @@ const useUserStore = create(
           console.log(error);
         }
       },
-      actionChangeRole: async (id,body )=>{
-        try{
-          const resp = await axios.patch(`/role/${id}`,body)
-        }catch(error){
-          console.log(error)
+      actionChangeRole: async (id, body) => {
+        try {
+          const resp = await axios.patch(`/role/${id}`, body);
+        } catch (error) {
+          console.log(error);
         }
       },
-      actionDeleteUser : async (id) =>{
-        try{
-          const resp = await axios.patch(`/delete/${id}`)
-        }catch(error){
-          console.log(error)
+      actionDeleteUser: async (id) => {
+        try {
+          const resp = await axios.patch(`/delete/${id}`);
+        } catch (error) {
+          console.log(error);
         }
       },
-      actionActivateUser : async (id) =>{
-        try{
-          const resp = await axios.patch(`/activateUser/${id}`)
-        }catch(error){
-          console.log(error)
+      actionActivateUser: async (id) => {
+        try {
+          const resp = await axios.patch(`/activateUser/${id}`);
+        } catch (error) {
+          console.log(error);
         }
       },
-      
-      setCurrentUser : (user) =>{
-        set({currentUser : user})
-      }
+
+      setCurrentUser: (user) => {
+        set({ currentUser: user });
+      },
     }),
     {
       name: "coffee-cafe-store",
       storage: createJSONStorage(() => localStorage),
-      partialize : (state)=>({user:state.user,token:state.token})
+      partialize: (state) => ({ user: state.user, token: state.token }),
     }
   )
 );
