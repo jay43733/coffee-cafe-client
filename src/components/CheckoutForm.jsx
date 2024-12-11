@@ -4,7 +4,7 @@ import {
   useStripe,
   useElements,
 } from "@stripe/react-stripe-js";
-import { saveOrder } from "@/api/stripe";
+// import { saveOrder } from "@/api/stripe";
 import useOrderStore from "@/store/order-store";
 import useCartStore from "@/store/cart-store";
 import useUserStore from "@/store/user-store";
@@ -15,10 +15,12 @@ export default function CheckoutForm({
   onSuccess,
   totalPrice,
 }) {
+   
   const actionDeleteAllCart = useCartStore(
     (state) => state.actionDeleteAllCart
   );
   const actionGetCart = useCartStore((state) => state.actionGetCart);
+  const actionAddOrder = useOrderStore((state) => state.actionAddOrder);
   const user = useUserStore((state) => state.user);
   const carts = useCartStore((state) => state.carts);
   const navigate = useNavigate();
@@ -30,6 +32,7 @@ export default function CheckoutForm({
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    console.log("Payment submission started");
 
     if (!stripe || !elements) {
       // Stripe.js hasn't yet loaded.
@@ -39,45 +42,43 @@ export default function CheckoutForm({
 
     setIsLoading(true);
     try {
+      console.log("Confirming payment...");
       const payload = await stripe.confirmPayment({
         elements,
         redirect: "if_required",
       });
+      console.log("Payment response:", payload);
+
+      if (payload?.error) {
+        return console.log(payload?.error);
+      }
+      
       if (payload?.paymentIntent?.status === "succeeded") {
-        // Create FormData
+        const order = {}
+        order.carts = carts
+        order.totalPrice = totalPrice
+
+        console.log("Payment succeeded, saving order...");
         const formData = new FormData();
-
-        // Add order data
-        const orderData = {
-          carts,
-          totalPrice,
-        };
-        formData.append("order", JSON.stringify(orderData));
-
-        // Add payment data
+        const convertOrder = JSON.stringify(order);
+        formData.append("order", convertOrder);
         formData.append("paymentMethod", "CREDIT");
-        formData.append("paymentIntent", JSON.stringify(payload.paymentIntent));
+        console.log(formData, "form");
 
         // Send combined data
-        const response = await saveOrder(formData);
-        console.log("Order saved:", response);
+        await actionAddOrder(formData);
 
         // Handle success
         await actionDeleteAllCart(user?.id);
         await actionGetCart();
         onSuccess?.();
       }
+
       if (user.role === "USER") {
         return navigate("/user/order/status");
       } else {
         return navigate("/user/admin/status");
       }
-
-      // This point will only be reached if there is an immediate error when
-      // confirming the payment. Otherwise, your customer will be redirected to
-      // your `return_url`. For some payment methods like iDEAL, your customer will
-      // be redirected to an intermediate site first to authorize the payment, then
-      // redirected to the `return_url`.
     } catch (err) {
       console.error("Payment failed:", err);
       setMessage("An unexpected error occurred.");

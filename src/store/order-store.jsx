@@ -8,8 +8,11 @@ const useOrderStore = create((set) => ({
   allOrders: [],
   currentOrder: null,
   actionAddOrder: async (form) => {
+    console.log(form,"sdsdsdsd")
     try {
-      const resp = await axios.post("/order/add", form);
+      const resp = await axios.post("/order/add", form,{
+        headers: {"Content-Type":"multipart/form-data"}
+      });
       set((state) => ({
         orders: [{ ...resp.data }, ...state.orders],
       }));
